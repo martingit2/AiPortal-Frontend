@@ -1,0 +1,518 @@
+/* src/pages/LandingPage.css */
+:root {
+  /* Ny Mørkegrønn Palett - Sofistikert og Teknologisk */
+  --primary-color: #0A3B32;       /* Dyp skoggrønn */
+  --primary-rgb: 10, 59, 50;       /* RGB-versjon for rgba() */
+  --secondary-color: #145A32;     /* En litt lysere, men fortsatt dyp grønn */
+  --accent-color-cta: #FFA726;    /* Varm oransje/rav for Call-to-Actions */
+  --accent-color-highlight: #4DB6AC; /* En lysere, frisk turkis/mint for highlights */
+
+  --neutral-darkest: #1B262C;   /* Veldig mørk blågrå (nesten svart) for tekst */
+  --neutral-dark: #2F4858;     /* Mørk blågrå for sekundærtekst */
+  --neutral-medium: #B0BEC5;   /* Lys grå for borders, subtile elementer */
+  --neutral-light: #ECEFF1;    /* Veldig lys grå for bakgrunner */
+  
+  --text-color-dark: var(--neutral-darkest);
+  --text-color-light: #FFFFFF;
+  --background-light: #FFFFFF; 
+  --background-offwhite: var(--neutral-light);
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --font-display: 'Lexend', var(--font-sans);
+}
+
+.landing-container {
+  font-family: var(--font-sans);
+  color: var(--text-color-dark);
+  line-height: 1.65; 
+  background-color: var(--background-light);
+  overflow-x: hidden; /* Forhindrer horisontal scrollbar fra animasjoner */
+}
+
+/* Header */
+.landing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 5%; 
+  background-color: rgba(255, 255, 255, 0.97); 
+  backdrop-filter: blur(8px); 
+  box-shadow: 0 1px 3px rgba(27, 38, 44, 0.05), 0 2px 8px rgba(27, 38, 44, 0.03); 
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Logo Styling - MED GRADIENT */
+.landing-header .logo {
+  font-size: 1.7rem; 
+  font-weight: 700;
+  font-family: var(--font-display);
+  text-decoration: none;
+  background: linear-gradient(45deg, var(--primary-color) 30%, var(--accent-color-highlight) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  /* text-fill-color: transparent; - Standard CSS, -webkit- er for eldre nettlesere */
+  padding: 0.2rem 0; 
+  display: inline-block; 
+  transition: filter 0.3s ease;
+}
+.landing-header .logo:hover {
+  filter: brightness(1.15) contrast(1.05); 
+}
+
+
+.main-nav .cta-button {
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px; 
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.25s ease-out;
+  margin-left: 1rem;
+  font-size: 0.9rem;
+  border: 2px solid transparent; 
+}
+
+.main-nav .cta-button.primary {
+  background-color: var(--accent-color-cta); 
+  color: var(--neutral-darkest); 
+  border-color: var(--accent-color-cta);
+}
+.main-nav .cta-button.primary:hover {
+  background-color: #FFB74D; 
+  box-shadow: 0 4px 12px rgba(255, 167, 38, 0.3);
+}
+
+.main-nav .cta-button.secondary {
+  background-color: transparent;
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+.main-nav .cta-button.secondary:hover {
+  background-color: var(--primary-color);
+  color: var(--text-color-light);
+}
+
+
+/* Hero Section */
+.hero {
+  background-color: var(--primary-color); 
+  color: var(--text-color-light);
+  padding: 7rem 5% 9rem;
+  text-align: center;
+  min-height: 75vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden; /* Viktig for animasjoner som kan gå utenfor */
+}
+
+.hero-content {
+  max-width: 850px; 
+  margin: 0 auto;
+  z-index: 2;
+}
+
+.hero-content h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6.5vw, 4.8rem);
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  line-height: 1.15;
+  color: var(--text-color-light);
+}
+
+.hero-content .subtitle {
+  font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+  margin-bottom: 2.5rem;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0.85; 
+  line-height: 1.75;
+}
+
+.hero .cta-button.hero-cta {
+  padding: 0.9rem 2rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  background-color: var(--accent-color-cta);
+  color: var(--neutral-darkest); 
+  border: 2px solid var(--accent-color-cta);
+  box-shadow: 0 5px 15px rgba(255, 167, 38, 0.25);
+  font-weight: 600; 
+}
+.hero .cta-button.hero-cta:hover {
+  background-color: #FFB74D; 
+  border-color: #FFB74D; 
+  box-shadow: 0 7px 20px rgba(255, 167, 38, 0.35);
+  transform: translateY(-2px) scale(1.02); 
+}
+
+
+/* Features Section */
+.features-section {
+  padding: 6rem 5%;
+  background-color: var(--background-offwhite); 
+  text-align: center;
+  overflow: hidden; /* For animasjoner */
+}
+
+.features-section h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+  margin-bottom: 1rem; 
+  color: var(--text-color-dark);
+}
+.features-section .section-subtitle {
+  font-size: 1.1rem;
+  color: var(--neutral-dark);
+  max-width: 700px;
+  margin: 0 auto 4rem auto; 
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.5rem; 
+  max-width: 1200px; 
+  margin: 0 auto; 
+}
+
+.feature-item { /* Denne klassen brukes av AnimatedCard */
+  background-color: var(--background-light); 
+  padding: 2.5rem;
+  border-radius: 10px; 
+  border: 1px solid var(--neutral-light); 
+  box-shadow: 0 6px 18px rgba(27, 38, 44, 0.06);
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+  text-align: left; 
+}
+
+.feature-item:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 30px rgba(27, 38, 44, 0.1);
+}
+
+.feature-icon-wrapper { /* Wrapper for ikonet inni feature-item/step-item */
+  display: inline-flex; 
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.35rem;
+}
+
+.feature-icon { /* Selve ikonet */
+  color: var(--accent-color-highlight); 
+}
+
+.feature-item h3 { /* Gjelder også for step-item hvis de deler struktur */
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  margin-bottom: 0.6rem;
+  color: var(--text-color-dark);
+  font-weight: 600;
+}
+
+.feature-item p { /* Gjelder også for step-item hvis de deler struktur */
+  font-size: 0.95rem;
+  color: var(--neutral-dark);
+  line-height: 1.7;
+}
+
+
+/* How It Works Section */
+.how-it-works-section {
+  padding: 6rem 5%;
+  background-color: var(--background-light);
+  overflow: hidden; /* For animasjoner */
+}
+
+/* Bruker .content-wrapper her som definert tidligere hvis du har den globalt,
+   ellers må du definere den eller style .how-it-works-section direkte for bredde */
+.content-wrapper { 
+  max-width: 1100px; 
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 2rem; /* Sørger for at innholdet ikke treffer kantene hvis wrapperen har bakgrunn */
+}
+
+
+.section-title-centered {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 1rem;
+  color: var(--text-color-dark);
+  text-align: center;
+}
+.section-subtitle-centered {
+  font-size: 1.1rem;
+  color: var(--neutral-dark);
+  max-width: 700px;
+  margin: 0 auto 4.5rem auto;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 3rem;
+}
+
+.step-item { /* Denne klassen brukes av AnimatedCard */
+  text-align: center; 
+  padding: 1.5rem;
+  /* border: 1px solid var(--neutral-light); */ /* Valgfritt */
+  /* border-radius: 8px; */ /* Valgfritt */
+}
+
+.step-icon-wrapper { /* Wrapper for ikonet */
+  display: inline-flex;
+  padding: 1rem;
+  background-color: rgba(var(--primary-rgb), 0.08); /* Subtil bakgrunn */
+  border-radius: 50%;
+  margin-bottom: 1.5rem;
+}
+.step-icon-wrapper svg { 
+  color: var(--primary-color);
+  width: 36px; 
+  height: 36px;
+}
+
+.step-item h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-color-dark);
+  font-weight: 600;
+}
+
+.step-item p {
+  font-size: 0.95rem;
+  color: var(--neutral-dark);
+  line-height: 1.7;
+}
+
+
+/* Platform Highlight Section */
+.platform-highlight-section {
+  padding: 7rem 5%;
+  overflow: hidden; 
+}
+.platform-highlight-section.light-bg {
+  background-color: var(--background-offwhite);
+}
+.platform-highlight-section.dark-bg {
+  background-color: var(--neutral-darkest); 
+  color: var(--text-color-light); 
+}
+.platform-highlight-section.dark-bg h2,
+.platform-highlight-section.dark-bg .highlight-tag,
+.platform-highlight-section.dark-bg p,
+.platform-highlight-section.dark-bg ul li {
+  color: var(--text-color-light); /* Sikrer at tekst er lys på mørk bakgrunn */
+}
+.platform-highlight-section.dark-bg .highlight-tag {
+  background-color: rgba(255,255,255,0.1); 
+  color: var(--accent-color-highlight); /* Bruker highlight farge for tag på mørk bakgrunn */
+}
+
+
+.highlight-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Standard er tekst til venstre, bilde til høyre */
+  align-items: center;
+  gap: 4rem;
+}
+.highlight-layout.reversed {
+  /* Bytter rekkefølge ved å bruke grid-template-areas eller ved å bytte rekkefølge i TSX */
+  /* For enkelhets skyld kan du bare bytte rekkefølgen på motion.div i TSX */
+}
+
+.highlight-text h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  margin-bottom: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.highlight-text .highlight-tag {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background-color: rgba(var(--primary-rgb), 0.08);
+  color: var(--primary-color);
+  border-radius: 15px;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.highlight-text p {
+  font-size: 1.05rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.75;
+}
+.highlight-text ul {
+  list-style: none;
+  padding-left: 0;
+}
+.highlight-text ul li {
+  padding-left: 1.8rem;
+  position: relative;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+.highlight-text ul li::before {
+  content: '✓'; 
+  color: var(--accent-color-highlight); 
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+.highlight-visual img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(27, 38, 44, 0.1);
+}
+
+
+/* Final CTA Section */
+.final-cta-section {
+  padding: 7rem 5%;
+  background-color: var(--primary-color); 
+  color: var(--text-color-light);
+  text-align: center;
+}
+.cta-content-wrapper { 
+  max-width: 750px;
+  margin: 0 auto;
+}
+.final-cta-section h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+.final-cta-section p {
+  font-size: 1.2rem;
+  margin-bottom: 2.5rem;
+  opacity: 0.9;
+}
+/* .hero-cta stilen brukes for knappen her */
+
+
+/* Responsivitet */
+@media (max-width: 992px) {
+  .hero-content h1 {
+    font-size: clamp(2.4rem, 6vw, 4rem);
+  }
+  .features-grid {
+    gap: 2rem;
+  }
+  .highlight-layout,
+  .highlight-layout.reversed {
+    grid-template-columns: 1fr; 
+    text-align: center;
+  }
+  .highlight-layout.reversed .highlight-visual {
+    grid-row: 1; 
+  }
+  .highlight-text {
+    margin-top: 2rem;
+  }
+  .highlight-text ul li {
+    padding-left: 0; 
+    text-align: left; 
+    display: inline-block; 
+    margin: 0 auto 0.75rem auto;
+    position: relative;
+    padding-left: 1.8rem; 
+  }
+}
+
+@media (max-width: 768px) {
+  .landing-header {
+    padding: 1rem 5%;
+    backdrop-filter: none; 
+    flex-direction: column; 
+    align-items: flex-start; 
+  }
+  .landing-header .logo {
+    margin-bottom: 0.75rem; 
+  }
+  .main-nav {
+    width: 100%; 
+    display: flex;
+    justify-content: flex-end; 
+    margin-top: 0; 
+  }
+   .main-nav .cta-button {
+    margin-left: 0.5rem; 
+  }
+
+  .hero {
+    padding: 5rem 5% 7rem;
+    min-height: auto; 
+  }
+
+  .features-section {
+    padding: 4rem 5%;
+  }
+  .features-section h2 {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    margin-bottom: 0.75rem;
+  }
+  .features-section .section-subtitle {
+    margin-bottom: 3rem;
+  }
+  .features-grid {
+    grid-template-columns: 1fr; 
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .step-item {
+    padding: 1rem;
+  }
+  .platform-highlight-section {
+    padding: 5rem 5%;
+  }
+  .final-cta-section {
+    padding: 5rem 5%;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-content h1 {
+    font-size: clamp(2rem, 7.5vw, 3.2rem);
+  }
+  .hero-content .subtitle {
+    font-size: clamp(1rem, 3.5vw, 1.2rem);
+  }
+  .feature-item, .step-item { /* Samme padding for begge på mobil */
+    padding: 2rem;
+  }
+  .main-nav { 
+    flex-direction: column; /* Stabler knapper på veldig små skjermer */
+    align-items: stretch; /* Får knappene til å ta full bredde */
+  }
+  .main-nav .cta-button { 
+    padding: 0.7rem 1rem; /* Litt større for touch */
+    font-size: 0.9rem;
+    margin-left: 0; /* Fjerner venstremargin når stablet */
+    margin-bottom: 0.5rem; 
+  }
+  .main-nav .cta-button:last-child {
+    margin-bottom: 0;
+  }
+}
