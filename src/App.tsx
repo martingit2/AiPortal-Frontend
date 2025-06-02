@@ -1,28 +1,60 @@
+// src/App.tsx
 import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, Navigate } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
-import './App.css'; // Du kan beholde eller endre denne for global app-styling
+import './App.css';
+import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react';
 
-// Placeholder for sider som Clerk vil bruke/omdirigere til
-const SignInPage: React.FC = () => <div>Logg inn her (Clerk vil håndtere dette)</div>;
-const SignUpPage: React.FC = () => <div>Registrer deg her (Clerk vil håndtere dette)</div>;
-const DashboardPage: React.FC = () => <div>Velkommen til ditt Dashboard! (Beskyttet)</div>;
-
+const DashboardPage: React.FC = () => {
+  return (
+    <div style={{ padding: '2rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <h1>Velkommen til ditt Aracanix Dashboard!</h1>
+        <UserButton afterSignOutUrl="/" />
+      </div>
+      <p>Dette er en beskyttet side, kun tilgjengelig for innloggede brukere.</p>
+      <p>Her vil du kunne kontrollere boter, AI-modeller, se analyser og statistikk.</p>
+    </div>
+  );
+};
 
 function App() {
   return (
     <>
-      {/* Navigasjon kan flyttes til en egen Navbar-komponent senere */}
-      {/* Foreløpig holder vi den enkel eller lar landingssiden ha sin egen header */}
-
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/sign-in/*" element={<SignInPage />} /> {/* Clerk bruker ofte * for sub-ruter */}
-        <Route path="/sign-up/*" element={<SignUpPage />} /> {/* Clerk bruker ofte * for sub-ruter */}
-        <Route path="/dashboard" element={<DashboardPage />} /> {/* Denne vil vi beskytte senere */}
-        {/* Du kan legge til en 404-side her også:
-        <Route path="*" element={<div>Side ikke funnet</div>} />
+        {/* Vi har fjernet /sign-in og /sign-up rutene her.
+            Clerk vil nå enten bruke sine hostede sider hvis en full omdirigering skjer,
+            eller bare vise modalen uten å matche en spesifikk React Router-rute.
         */}
+        <Route
+          path="/dashboard"
+          element={
+            <>
+              <SignedIn>
+                <DashboardPage />
+              </SignedIn>
+              <SignedOut>
+                {/* Hvis brukeren ikke er logget inn og prøver å nå /dashboard,
+                    vil Clerk sin <SignedIn>/<SignedOut> logikk ofte håndtere
+                    omdirigering til pålogging (enten modal eller hostet side).
+                    En <Navigate to="/" /> er en trygg fallback her for å sende dem til forsiden.
+                */}
+                <Navigate to="/" replace />
+              </SignedOut>
+            </>
+          }
+        />
+        <Route 
+          path="*" 
+          element={
+            <div style={{ textAlign: 'center', padding: '5rem' }}>
+              <h2>404 - Side ikke funnet</h2>
+              <p>Beklager, vi fant ikke siden du lette etter.</p>
+              <Link to="/" style={{color: 'var(--primary-purple)', textDecoration:'underline'}}>Tilbake til forsiden</Link>
+            </div>
+          } 
+        />
       </Routes>
     </>
   );

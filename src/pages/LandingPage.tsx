@@ -5,6 +5,7 @@ import './LandingPage.css';
 import { BarChart3, BrainCircuit, Zap, DatabaseZap, Settings2, Eye, CheckCircle, Linkedin, Twitter, Github } from 'lucide-react';
 import { motion, useAnimation, type Variants } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { SignedIn, SignedOut, UserButton, useClerk } from '@clerk/clerk-react'; // Importer useClerk
 
 // Definer animasjonsvarianter for kort/elementer som fader inn og sklir opp
 const cardVariants: Variants = {
@@ -55,8 +56,20 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({ children, className, index 
   );
 };
 
+// Custom Hook for seksjonsanimasjoner (refaktorert fra tidligere)
+const useSectionAnimationControls = (threshold = 0.2, delay = 0.2) => {
+  const controls = useAnimation();
+  const [ref, inView] = useInView({ triggerOnce: true, threshold });
+  React.useEffect(() => {
+    if (inView) controls.start({ opacity: 1, y: 0, transition: { duration: 0.8, delay, ease: "easeOut" } });
+  }, [controls, inView, delay]);
+  return { ref, controls, initial: { opacity: 0, y: 50 } as const };
+};
+
 
 const LandingPage: React.FC = () => {
+  const { openSignIn, openSignUp } = useClerk(); // Hent Clerk-funksjoner
+
   const features = [
     {
       icon: <BarChart3 size={36} className="feature-icon" />,
@@ -74,21 +87,12 @@ const LandingPage: React.FC = () => {
       description: "Integrer og analyser data i sanntid fra diverse kilder, inkludert sosiale medier, API-er og markedsinformasjon."
     }
   ];
-
-  const sectionAnimationControls = (threshold = 0.2, delay = 0.2) => {
-    const controls = useAnimation();
-    const [ref, inView] = useInView({ triggerOnce: true, threshold });
-    React.useEffect(() => {
-      if (inView) controls.start({ opacity: 1, y: 0, transition: { duration: 0.8, delay, ease: "easeOut" } });
-    }, [controls, inView, delay]);
-    return { ref, controls, initial: { opacity: 0, y: 50 } as const }; // 'as const' for bedre typeinferens
-  };
   
-  const featuresSectionAnim = sectionAnimationControls();
-  const howItWorksAnim = sectionAnimationControls();
-  const highlight1Anim = sectionAnimationControls(0.2, 0);
-  const highlight2Anim = sectionAnimationControls(0.2, 0);
-  const finalCtaAnim = sectionAnimationControls(0.3, 0.3);
+  const featuresSectionAnim = useSectionAnimationControls();
+  const howItWorksAnim = useSectionAnimationControls();
+  const highlight1Anim = useSectionAnimationControls(0.2, 0);
+  const highlight2Anim = useSectionAnimationControls(0.2, 0);
+  const finalCtaAnim = useSectionAnimationControls(0.3, 0.3);
 
 
   return (
@@ -96,8 +100,26 @@ const LandingPage: React.FC = () => {
       <header className="landing-header">
         <div className="logo">Aracanix</div>
         <nav className="main-nav">
-          {/* <Link to="/sign-up" className="cta-button primary">Kom i gang</Link> */}
-          <Link to="/sign-in" className="cta-button secondary">Logg Inn</Link>
+          <SignedOut>
+            <button 
+              className="cta-button secondary" 
+              onClick={() => openSignIn({ redirectUrl: '/dashboard' })}
+            >
+              Logg Inn
+            </button>
+            <button 
+              className="cta-button primary" 
+              onClick={() => openSignUp({ redirectUrl: '/dashboard' })}
+            >
+              Registrer Deg
+            </button>
+          </SignedOut>
+          <SignedIn>
+            <Link to="/dashboard" className="cta-button secondary">
+              Dashboard
+            </Link>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
         </nav>
       </header>
 
@@ -113,7 +135,12 @@ const LandingPage: React.FC = () => {
             <p className="subtitle">
               Aracanix samler og analyserer komplekse data, og leverer presis innsikt for å optimalisere dine strategier – enten det gjelder markedstrender, sport, eller andre dynamiske felt.
             </p>
-             <Link to="/sign-up" className="cta-button primary hero-cta">Utforsk Mulighetene</Link>
+            <button 
+              className="cta-button primary hero-cta" 
+              onClick={() => openSignUp({ redirectUrl: '/dashboard' })}
+            >
+              Utforsk Mulighetene
+            </button>
           </motion.div>
         </section>
 
@@ -252,15 +279,18 @@ const LandingPage: React.FC = () => {
           <div className="cta-content-wrapper">
             <h2>Klar for å Ta Kontroll over Dine Data?</h2>
             <p>Bli med i forkant av datadrevet innovasjon. Aracanix gir deg verktøyene.</p>
-            <Link to="/sign-up" className="cta-button final-action"> {/* Endret klasse for unik styling */}
+            <button 
+              className="cta-button final-action" 
+              onClick={() => openSignUp({ redirectUrl: '/dashboard' })}
+            >
               Be om Tilgang Nå
-            </Link>
+            </button>
           </div>
         </motion.section>
       </main>
 
       <footer className="landing-footer">
-        <div className="footer-content-wrapper content-wrapper">
+        <div className="footer-content-wrapper content-wrapper"> {/* La til content-wrapper her også for konsistens */}
           <div className="footer-logo-area">
             <div className="logo">Aracanix</div>
             <p className="footer-tagline">Datadrevet Innsikt & Analyse.</p>
