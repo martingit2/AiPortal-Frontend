@@ -4,21 +4,19 @@
   --primary-purple: #6A0DAD;
   --primary-purple-rgb: 106, 13, 173;
   --secondary-purple: #9370DB;
-  --secondary-purple-rgb: 147, 112, 219; /* Lagt til for .dark-bg .highlight-tag */
-  --accent-light-lavender: #E6E6FA; /* For sjekkmerker på mørk bakgrunn */
-  --neutral-medium: #B0BEC5; /* Denne er en god kandidat for footer-tekst */
-  --neutral-light-grey-footer: #CED4DA; /* Ny, litt lysere grå for god lesbarhet */
-  --text-on-dark: #FFFFFF; /* For H4 i footer */
+  --secondary-purple-rgb: 147, 112, 219;
+  --accent-light-lavender: #E6E6FA;
+  --accent-color-highlight: #80CBC4; /* Gjenbruker fra en tidligere palett, kan endres */
+  --accent-color-highlight-rgb: 128, 203, 196; /* RGB for --accent-color-highlight */
   
-  /* CTA-farge er nå primærfargen for .final-action, ellers en lysere lilla for andre "primary" */
-  --cta-color-main: var(--primary-purple);
+  --cta-color-main: var(--primary-purple); /* For "Final Action" knapp */
   --cta-hover-color-main: #500A8C;
   --cta-text-color-main: #FFFFFF;
 
-  --cta-color-highlight: #8A2BE2; /* Lysere lilla for "Utforsk Mulighetene" */
-  --cta-hover-color-highlight: #7B1FA2;
-  --cta-text-color-highlight: #FFFFFF;
-
+  /* For "Registrer Deg" og "Utforsk Mulighetene" knapper */
+  --cta-color-secondary-action: #8A2BE2; /* En lysere, mer "action-orientert" lilla */
+  --cta-hover-color-secondary-action: #7B1FA2; /* Mørkere variant av den over */
+  --cta-text-color-secondary-action: #FFFFFF;
 
   --dark-background: #121212;
   --dark-background-lighter: #1E1E1E;
@@ -32,6 +30,8 @@
 
   --border-color-light: #EAEAEA;
   --border-color-dark-theme: #3A3A3A;
+
+  --neutral-light-grey-footer: #CED4DA; /* For footer tekst */
 
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   --font-display: 'Lexend', var(--font-sans);
@@ -78,37 +78,41 @@
   filter: brightness(1.1) saturate(1.2);
 }
 
+/* Generell .main-nav styling */
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* Bruk gap for mellomrom mellom knapper OG UserButton */
+}
+
 .main-nav .cta-button {
   padding: 0.65rem 1.5rem;
   border-radius: 6px;
   text-decoration: none;
   font-weight: 600;
   transition: all 0.25s ease-out;
-  margin-left: 1rem;
+  /* margin-left fjernes, håndteres av gap på .main-nav */
   font-size: 0.9rem;
   border: 2px solid transparent;
+  cursor: pointer; 
 }
 
-/* "Utforsk Mulighetene" knappen i Hero */
-.hero .cta-button.hero-cta {
-  background-color: var(--cta-color-highlight); 
-  color: var(--cta-text-color-highlight);
-  border-color: var(--cta-color-highlight);
+/* "Registrer Deg" i Header */
+.main-nav .cta-button.primary {
+  background-color: var(--cta-color-secondary-action); 
+  color: var(--cta-text-color-secondary-action);
+  border-color: var(--cta-color-secondary-action);
   box-shadow: 0 4px 12px rgba(var(--primary-purple-rgb), 0.15);
-  padding: 0.9rem 2.2rem;
-  font-size: 1.05rem;
-  font-weight: 600;
 }
-.hero .cta-button.hero-cta:hover {
-  background-color: var(--cta-hover-color-highlight); 
-  border-color: var(--cta-hover-color-highlight);
-  color: var(--cta-text-color-highlight); 
+.main-nav .cta-button.primary:hover {
+  background-color: var(--cta-hover-color-secondary-action); 
+  border-color: var(--cta-hover-color-secondary-action);
+  color: var(--cta-text-color-secondary-action); 
   box-shadow: 0 6px 18px rgba(var(--primary-purple-rgb), 0.25);
   transform: translateY(-2px);
 }
 
-
-.main-nav .cta-button.secondary { /* "Logg Inn" knappen i headeren */
+.main-nav .cta-button.secondary { /* "Logg Inn" knappen & "Dashboard" knappen */
   background-color: transparent;
   color: var(--primary-purple);
   border-color: var(--primary-purple);
@@ -116,6 +120,17 @@
 .main-nav .cta-button.secondary:hover {
   background-color: var(--primary-purple);
   color: var(--text-on-dark);
+}
+
+/* Styling for Clerk UserButton hvis den er et direkte barn av .main-nav */
+.main-nav .cl-userButton-root { 
+  /* Ingen ekstra margin nødvendig hvis .main-nav bruker 'gap' */
+}
+/* Hvis du bruker en wrapper: */
+.user-button-wrapper {
+  /* Ingen ekstra margin nødvendig hvis .main-nav bruker 'gap' */
+  display: flex;
+  align-items: center;
 }
 
 
@@ -152,6 +167,25 @@
   color: var(--text-on-light-secondary); 
   line-height: 1.75;
 }
+/* "Utforsk Mulighetene" knappen i Hero */
+.hero .cta-button.hero-cta {
+  background-color: var(--cta-color-secondary-action); 
+  color: var(--cta-text-color-secondary-action);
+  border-color: var(--cta-color-secondary-action);
+  box-shadow: 0 5px 15px rgba(var(--primary-purple-rgb), 0.2); /* Justert skygge */
+  padding: 0.9rem 2.2rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-radius: 8px;
+}
+.hero .cta-button.hero-cta:hover {
+  background-color: var(--cta-hover-color-secondary-action); 
+  border-color: var(--cta-hover-color-secondary-action);
+  color: var(--cta-text-color-secondary-action); 
+  box-shadow: 0 7px 20px rgba(var(--primary-purple-rgb), 0.3);
+  transform: translateY(-2px) scale(1.02);
+}
+
 
 /* Features Section */
 .features-section {
@@ -307,12 +341,12 @@
 }
 .platform-highlight-section.dark-bg h2,
 .platform-highlight-section.dark-bg p,
-.platform-highlight-section.dark-bg ul li { /* Tekstfarge for mørk bakgrunn */
+.platform-highlight-section.dark-bg ul li {
   color: var(--text-on-dark);
 }
 .platform-highlight-section.dark-bg .highlight-tag {
-  background-color: rgba(var(--secondary-purple-rgb, 147, 112, 219), 0.2); /* Lysere lilla bakgrunn for tag */
-  color: var(--secondary-purple); /* Lysere lilla tekst for tag */
+  background-color: rgba(var(--secondary-purple-rgb), 0.2); 
+  color: var(--secondary-purple); 
 }
 
 .highlight-layout {
@@ -334,14 +368,12 @@
   padding: 0.35rem 0.9rem;
   font-size: 0.75rem;
   font-weight: 600;
-  background-color: rgba(var(--primary-purple-rgb), 0.08);
-  color: var(--primary-purple);
   border-radius: 15px;
   margin-bottom: 1.2rem;
   text-transform: uppercase;
   letter-spacing: 0.75px;
 }
-.platform-highlight-section.light-bg .highlight-text .highlight-tag { /* Sikrer riktig farge for lys bakgrunn */
+.platform-highlight-section.light-bg .highlight-text .highlight-tag {
     background-color: rgba(var(--primary-purple-rgb), 0.08);
     color: var(--primary-purple);
 }
@@ -364,7 +396,7 @@
 }
 
 .list-check-icon {
-  color: var(--primary-purple); /* Lilla sjekkmerker på lys bakgrunn */
+  color: var(--primary-purple); 
   margin-right: 0.7rem; 
   flex-shrink: 0; 
   margin-top: 0.15em; 
@@ -372,7 +404,7 @@
   height: 20px;
 }
 .platform-highlight-section.dark-bg .list-check-icon {
-  color: var(--accent-light-lavender); /* Lys lavendel sjekkmerker på mørk bakgrunn */
+  color: var(--accent-light-lavender); /* Lys lavendel for sjekkmerker på mørk bakgrunn */
 }
 
 .highlight-visual img {
@@ -411,7 +443,6 @@
   line-height: 1.7;
 }
 
-/* Ny stil for den avsluttende CTA-knappen */
 .final-cta-section .cta-button.final-action { 
   padding: 1rem 2.5rem;
   font-size: 1.1rem;
@@ -431,54 +462,52 @@
 }
 
 
-/* Footer - Forbedret kontrast */
+/* Footer - Redusert høyde og justert kontrast */
 .landing-footer {
   background-color: var(--dark-background); 
-  color: var(--neutral-medium); /* Generell tekstfarge i footer, kan justeres */
-  padding: 4rem 0 0 0; 
+  color: var(--neutral-light-grey-footer, #D1D1D1); /* Gjort fallback litt lysere */
+  padding-top: 3rem; 
   font-size: 0.9rem;
 }
 
 .footer-content-wrapper {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 3rem;
-  padding-bottom: 3.5rem; 
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem; 
+  padding-bottom: 2.5rem; 
   border-bottom: 1px solid var(--border-color-dark-theme); 
-  margin-bottom: 2.5rem; 
-  /* Sørger for at content-wrapper er sentrert hvis den er smalere enn paddingen på .landing-footer */
-  max-width: 1200px; /* Eller din foretrukne maks bredde for footer-innhold */
+  margin-bottom: 2rem; 
+  max-width: 1100px; 
   margin-left: auto;
   margin-right: auto;
-  padding-left: 5%; /* Matcher padding på andre seksjoner */
-  padding-right: 5%;
+  padding-left: 2rem; 
+  padding-right: 2rem; 
 }
 
 .footer-logo-area .logo {
-  font-size: 1.9rem; 
-  font-weight: 700;
-  font-family: var(--font-display);
-  text-decoration: none;
+  font-size: 1.8rem; 
+  margin-bottom: 0.5rem;
   background: linear-gradient(45deg, var(--secondary-purple) 30%, var(--accent-light-lavender) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  display: inline-block; 
-  margin-bottom: 0.75rem;
+  font-family: var(--font-display);
+  text-decoration: none;
+  display: inline-block;
 }
 .footer-tagline {
-  font-size: 0.9rem;
-  color: var(--neutral-light); /* <--- ENDRING: Lysere farge for tagline */
-  opacity: 0.8; /* <--- Kan også bruke opasitet for å dempe litt */
-  margin-top: 0;
+  font-size: 0.85rem; 
+  color: var(--neutral-light-grey-footer, #D1D1D1); 
+  opacity: 0.9;
+  margin-top: 0.25rem;
   max-width: 250px; 
 }
 
 .footer-links h4 {
   font-family: var(--font-display);
-  font-size: 1.05rem; 
-  color: var(--text-on-dark); /* Hvit/Lyseste farge for overskrifter */
-  margin-bottom: 1.2rem;
+  font-size: 1rem; 
+  color: var(--text-on-dark); 
+  margin-bottom: 0.8rem;
   font-weight: 600;
 }
 
@@ -489,35 +518,35 @@
 }
 
 .footer-links ul li {
-  margin-bottom: 0.7rem;
+  margin-bottom: 0.5rem;
 }
 
 .footer-links ul li a {
-  color: var(--neutral-light); /* <--- ENDRING: Lysere farge for lenker */
-  opacity: 0.85; /* <--- Litt dempet for standardtilstand */
+  color: var(--neutral-light-grey-footer, #D1D1D1); 
+  opacity: 0.85;
   text-decoration: none;
   transition: color 0.3s ease, opacity 0.3s ease;
 }
 .footer-links ul li a:hover {
-  color: var(--accent-light-lavender); /* Lys lavendel ved hover, som du likte */
+  color: var(--accent-light-lavender); 
   opacity: 1;
-  text-decoration: none; /* Fjerner standard underline ved hover hvis du vil ha renere look */
+  text-decoration: none; 
 }
 
 .footer-social h4 { 
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: var(--text-on-dark);
-  margin-bottom: 1.2rem;
+  margin-bottom: 0.8rem;
   font-weight: 600;
 }
 .social-icons {
   display: flex;
-  gap: 1.2rem; 
+  gap: 1rem; 
 }
 .social-icons a {
-  color: var(--neutral-light); /* <--- ENDRING: Lysere farge for ikoner */
-  opacity: 0.85; /* <--- Litt dempet */
+  color: var(--neutral-light-grey-footer, #D1D1D1); 
+  opacity: 0.85;
   transition: color 0.3s ease, opacity 0.3s ease, transform 0.2s ease;
 }
 .social-icons a:hover {
@@ -528,10 +557,12 @@
 
 .footer-bottom {
   text-align: center;
-  padding-bottom: 2.5rem;
-  font-size: 0.85rem;
-  color: var(--neutral-medium); /* Denne kan være litt mørkere da den er mindre kritisk */
+  padding-bottom: 2rem; 
+  font-size: 0.8rem; 
+  color: var(--neutral-light-grey-footer, #D1D1D1); 
+  opacity: 0.8;
 }
+
 
 /* Responsivitet */
 @media (max-width: 992px) {
@@ -547,8 +578,8 @@
 @media (max-width: 768px) {
   .landing-header { padding: 1rem 5%; backdrop-filter: none; flex-direction: column; align-items: center; }
   .landing-header .logo { margin-bottom: 1rem; }
-  .main-nav { width: auto; display: flex; justify-content: center; margin-top: 0; }
-  .main-nav .cta-button { margin-left: 0.5rem; margin-right: 0.5rem; }
+  .main-nav { width: auto; display: flex; justify-content: center; margin-top: 0; gap: 0.75rem; } /* Lagt til gap */
+  .main-nav .cta-button { margin-left: 0; } /* Fjerner margin-left pga gap */
   .hero { padding: 6rem 5% 8rem; }
   .features-section { padding: 5rem 5%; }
   .features-section h2 { font-size: clamp(2rem, 4.5vw, 2.8rem); margin-bottom: 0.75rem; }
@@ -569,12 +600,11 @@
   .hero-content h1 { font-size: clamp(2rem, 8vw, 3.2rem); }
   .hero-content .subtitle { font-size: clamp(1rem, 3.8vw, 1.2rem); }
   .feature-item, .step-item { padding: 2rem 1.5rem; }
-  .main-nav { flex-direction: column; align-items: stretch; }
-  .main-nav .cta-button { padding: 0.8rem 1rem; font-size: 1rem; margin-left: 0; margin-bottom: 0.75rem; }
-  .main-nav .cta-button:last-child { margin-bottom: 0; }
+  .main-nav { flex-direction: column; align-items: stretch; gap: 0.5rem;}
+  .main-nav .cta-button { padding: 0.8rem 1rem; font-size: 1rem; margin-bottom: 0; } /* Fjerner margin-bottom pga gap */
   .highlight-text ul li { justify-content: flex-start; width: 100%;}
   .final-cta-section h2 { font-size: clamp(1.8rem, 5vw, 2.5rem); }
   .final-cta-section p { font-size: 1.1rem; }
   .footer-content-wrapper { grid-template-columns: 1fr; text-align: center; }
-  .footer-logo-area, .footer-links, .footer-social { grid-column: span 1; margin-bottom: 2rem; } /* Mer luft */
+  .footer-logo-area, .footer-links, .footer-social { grid-column: span 1; margin-bottom: 2rem; }
 }

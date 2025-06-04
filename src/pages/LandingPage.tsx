@@ -5,7 +5,13 @@ import './LandingPage.css';
 import { BarChart3, BrainCircuit, Zap, DatabaseZap, Settings2, Eye, CheckCircle, Linkedin, Twitter, Github } from 'lucide-react';
 import { motion, useAnimation, type Variants } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { SignedIn, SignedOut, UserButton, useClerk } from '@clerk/clerk-react'; // Importer useClerk
+import { SignedIn, SignedOut, UserButton, useClerk } from '@clerk/clerk-react';
+
+// Importer bildene dine (pass på at stien er korrekt)
+import dataIntegrationImage from '../bilder/DATA1.png';
+import aiModelingImage from '../bilder/DATA2.png';
+
+
 
 // Definer animasjonsvarianter for kort/elementer som fader inn og sklir opp
 const cardVariants: Variants = {
@@ -56,7 +62,7 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({ children, className, index 
   );
 };
 
-// Custom Hook for seksjonsanimasjoner (refaktorert fra tidligere)
+// Custom Hook for seksjonsanimasjoner
 const useSectionAnimationControls = (threshold = 0.2, delay = 0.2) => {
   const controls = useAnimation();
   const [ref, inView] = useInView({ triggerOnce: true, threshold });
@@ -68,7 +74,7 @@ const useSectionAnimationControls = (threshold = 0.2, delay = 0.2) => {
 
 
 const LandingPage: React.FC = () => {
-  const { openSignIn, openSignUp } = useClerk(); // Hent Clerk-funksjoner
+  const { openSignIn, openSignUp } = useClerk();
 
   const features = [
     {
@@ -98,7 +104,7 @@ const LandingPage: React.FC = () => {
   return (
     <div className="landing-container">
       <header className="landing-header">
-        <div className="logo">Aracanix</div>
+        <div className="logo">Arcanix</div>
         <nav className="main-nav">
           <SignedOut>
             <button 
@@ -118,7 +124,10 @@ const LandingPage: React.FC = () => {
             <Link to="/dashboard" className="cta-button secondary">
               Dashboard
             </Link>
-            <UserButton afterSignOutUrl="/" />
+            {/* Alternativ med wrapper for UserButton for enklere styling: */}
+            <div className="user-button-wrapper"> {/* <--- WRAPPER */}
+              <UserButton afterSignOutUrl="/" />
+            </div>
           </SignedIn>
         </nav>
       </header>
@@ -133,9 +142,9 @@ const LandingPage: React.FC = () => {
           >
             <h1>Avansert Innsikt. Intelligente Beslutninger.</h1>
             <p className="subtitle">
-              Aracanix samler og analyserer komplekse data, og leverer presis innsikt for å optimalisere dine strategier – enten det gjelder markedstrender, sport, eller andre dynamiske felt.
+              Arcanix samler og analyserer komplekse data, og leverer presis innsikt for å optimalisere dine strategier – enten det gjelder markedstrender, sport, eller andre dynamiske felt.
             </p>
-            <button 
+             <button 
               className="cta-button primary hero-cta" 
               onClick={() => openSignUp({ redirectUrl: '/dashboard' })}
             >
@@ -151,7 +160,7 @@ const LandingPage: React.FC = () => {
           initial={featuresSectionAnim.initial}
           animate={featuresSectionAnim.controls}
         >
-          <h2>Hvorfor Aracanix?</h2>
+          <h2>Hvorfor Arcanix?</h2>
           <p className="section-subtitle">Utforsk kraften i en plattform bygget for innsamling, analyse og prediksjon.</p>
           <div className="features-grid">
             {features.map((feature, index) => (
@@ -176,7 +185,7 @@ const LandingPage: React.FC = () => {
           animate={howItWorksAnim.controls}
         >
           <div className="content-wrapper">
-            <h2 className="section-title-centered">Slik Gir Aracanix Deg Oversikt</h2>
+            <h2 className="section-title-centered">Slik Gir Arcanix Deg Oversikt</h2>
             <p className="section-subtitle-centered">
               Fra rådata til handlingsklar innsikt – en sømløs og kraftfull prosess.
             </p>
@@ -184,7 +193,7 @@ const LandingPage: React.FC = () => {
               <AnimatedCard className="step-item" index={0} threshold={0.3}>
                 <div className="step-icon-wrapper"><DatabaseZap size={40} /></div> 
                 <h3>1. Datainnsamling & Integrasjon</h3>
-                <p>Koble til et bredt spekter av datakilder – API-er, sosiale medier, databaser og filopplastinger. Aracanix sentraliserer din informasjon.</p>
+                <p>Koble til et bredt spekter av datakilder – API-er, sosiale medier, databaser og filopplastinger. Arcanix sentraliserer din informasjon.</p>
               </AnimatedCard>
               <AnimatedCard className="step-item" index={1} threshold={0.3}>
                 <div className="step-icon-wrapper"><Settings2 size={40} /></div>
@@ -216,7 +225,7 @@ const LandingPage: React.FC = () => {
             >
               <span className="highlight-tag">Dataintegrasjon</span>
               <h2>Koble til Verden av Data</h2>
-              <p>Aracanix' fleksible arkitektur lar deg sømløst integrere data fra Twitter-feeds, finansielle API-er, sportsresultater, dine egne databaser, og mye mer. Alt på ett sted, klart for analyse.</p>
+              <p>Arcanix' fleksible arkitektur lar deg sømløst integrere data fra Twitter-feeds, finansielle API-er, sportsresultater, dine egne databaser, og mye mer. Alt på ett sted, klart for analyse.</p>
               <ul>
                 <li><CheckCircle size={20} className="list-check-icon" /> Sanntids datastrømmer</li>
                 <li><CheckCircle size={20} className="list-check-icon" /> Planlagt innhenting</li>
@@ -230,7 +239,7 @@ const LandingPage: React.FC = () => {
               viewport={{ once: true, amount: 0.4 }} 
               transition={{ duration: 0.7, delay: 0.5, ease:"easeOut" }}
             >
-              <img src="/placeholder-visual-1.svg" alt="Dataintegrasjon illustrasjon" />
+              <img src={dataIntegrationImage} alt="Dataintegrasjon illustrasjon" />
             </motion.div>
           </div>
         </motion.section>
@@ -249,7 +258,7 @@ const LandingPage: React.FC = () => {
               viewport={{ once: true, amount: 0.4 }} 
               transition={{ duration: 0.7, delay: 0.5, ease:"easeOut" }}
             >
-               <img src="/placeholder-visual-2.svg" alt="AI Modellering illustrasjon" />
+               <img src={aiModelingImage} alt="AI Modellering illustrasjon" />
             </motion.div>
             <motion.div 
               className="highlight-text" 
@@ -260,7 +269,7 @@ const LandingPage: React.FC = () => {
             >
               <span className="highlight-tag">AI & Maskinlæring</span>
               <h2>Bygg Fremtidens Modeller</h2>
-              <p>Enten du er en erfaren data scientist eller nybegynner, gir Aracanix deg verktøyene for å lage, trene og validere kraftfulle AI-modeller. Utforsk mønstre, prediker utfall og automatiser komplekse analyser.</p>
+              <p>Enten du er en erfaren data scientist eller nybegynner, gir Arcanix deg verktøyene for å lage, trene og validere kraftfulle AI-modeller. Utforsk mønstre, prediker utfall og automatiser komplekse analyser.</p>
               <ul>
                 <li><CheckCircle size={20} className="list-check-icon" /> Intuitivt modellbygger-grensesnitt</li>
                 <li><CheckCircle size={20} className="list-check-icon" /> Støtte for populære ML-rammeverk</li>
@@ -278,7 +287,7 @@ const LandingPage: React.FC = () => {
         >
           <div className="cta-content-wrapper">
             <h2>Klar for å Ta Kontroll over Dine Data?</h2>
-            <p>Bli med i forkant av datadrevet innovasjon. Aracanix gir deg verktøyene.</p>
+            <p>Bli med i forkant av datadrevet innovasjon. Arcanix gir deg verktøyene.</p>
             <button 
               className="cta-button final-action" 
               onClick={() => openSignUp({ redirectUrl: '/dashboard' })}
@@ -290,9 +299,9 @@ const LandingPage: React.FC = () => {
       </main>
 
       <footer className="landing-footer">
-        <div className="footer-content-wrapper content-wrapper"> {/* La til content-wrapper her også for konsistens */}
+        <div className="footer-content-wrapper content-wrapper">
           <div className="footer-logo-area">
-            <div className="logo">Aracanix</div>
+            <div className="logo">Arcanix</div>
             <p className="footer-tagline">Datadrevet Innsikt & Analyse.</p>
           </div>
           <div className="footer-links">
@@ -319,7 +328,7 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} Aracanix. Alle rettigheter forbeholdt.</p>
+          <p>© {new Date().getFullYear()} Arcanix. Alle rettigheter forbeholdt.</p>
         </div>
       </footer>
     </div>
