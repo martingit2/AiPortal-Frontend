@@ -18,7 +18,7 @@ const DashboardPage: React.FC = () => {
                 }
 
                 // Kall det sikrede endepunktet på backenden
-                const response = await fetch('http://localhost:8081/api/v1/secure/me', { // SJEKK AT PORTEN ER KORREKT
+                const response = await fetch('http://localhost:8080/api/v1/secure/me', { // SJEKK AT PORTEN ER KORREKT
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }

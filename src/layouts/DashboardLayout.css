@@ -1,0 +1,32 @@
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f7f9; /* En lys grå bakgrunn for innholdsområdet */
+}
+
+.dashboard-main-content {
+  flex-grow: 1; /* Tar resten av plassen */
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Justerer elementer til høyre */
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  height: 60px; /* Fast høyde for header */
+  box-sizing: border-box;
+}
+
+.header-spacer {
+  flex-grow: 1; /* Tomt element som skyver UserButton til høyre */
+}
+
+.dashboard-page-content {
+  padding: 2rem;
+  flex-grow: 1;
+  overflow-y: auto; /* Scrollbar hvis innholdet er for langt */
+}

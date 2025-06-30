@@ -1,0 +1,55 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 260px;
+  flex-shrink: 0; /* Forhindrer at sidebaren krymper */
+  background-color: #1a222e; /* Mørk sidebar */
+  color: #a7b1c2;
+}
+
+.sidebar-logo {
+  padding: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  font-family: var(--font-display, 'Lexend'); /* Gjenbruker font fra global CSS */
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.5rem;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  padding: 0.9rem 1.5rem;
+  text-decoration: none;
+  color: #a7b1c2; /* Lys grå tekst */
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s;
+  border-left: 3px solid transparent; /* For aktiv-state indikator */
+}
+
+.sidebar-nav a:hover {
+  background-color: #293846;
+  color: #ffffff;
+}
+
+.sidebar-nav a.active {
+  background-color: #24313f;
+  color: #ffffff;
+  border-left-color: var(--primary-purple, #6A0DAD); /* Bruker lilla fra global CSS */
+}
+
+.sidebar-nav a svg {
+  margin-right: 0.75rem;
+}
+
+.sidebar-divider {
+  border: none;
+  border-top: 1px solid #2f4050;
+  margin: 1rem 1.5rem;
+}

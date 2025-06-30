@@ -1,38 +1,46 @@
-// src/App.tsx
 import React from 'react';
-import { Routes, Route, Link, Navigate } from 'react-router-dom';
+import { Routes, Route, Link, Navigate, Outlet } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
-import DashboardPage from './pages/DashboardPage'; // <--- IMPORTER DEN NYE FILEN
-import './App.css';
-import { SignedIn, SignedOut } from '@clerk/clerk-react'; // UserButton er ikke lenger nødvendig her
 
-// DashboardPage-komponenten er nå fjernet fra denne filen.
+import './App.css';
+import { SignedIn, SignedOut } from '@clerk/clerk-react';
+import DashboardLayout from './layouts/DashboardLayout';
+import DashboardPage from './pages/dashboard/DashboardPage';
+
+// Lag en enkel placeholder for de andre sidene
+const AnalysesPage: React.FC = () => <h2>Mine Analyser</h2>;
+const BotsPage: React.FC = () => <h2>Mine Boter</h2>;
+const ModelsPage: React.FC = () => <h2>Mine Modeller</h2>;
+const SettingsPage: React.FC = () => <h2>Innstillinger</h2>;
 
 function App() {
   return (
     <>
-      {/* Ingen global header her, siden hver side (LandingPage, DashboardPage) håndterer sin egen. */}
       <Routes>
         <Route path="/" element={<LandingPage />} />
         
-        {/* Beskyttet rute for Dashboard */}
+        {/* Beskyttet rute som bruker DashboardLayout */}
         <Route
           path="/dashboard"
           element={
             <>
-              {/* Viser DashboardPage kun hvis brukeren er logget inn */}
               <SignedIn>
-                <DashboardPage />
+                <DashboardLayout />
               </SignedIn>
-              {/* Omdirigerer til forsiden hvis brukeren ikke er logget inn */}
               <SignedOut>
                 <Navigate to="/" replace /> 
               </SignedOut>
             </>
           }
-        />
+        >
+          {/* "Nested" ruter. Disse vil bli rendret inne i DashboardLayout's <Outlet /> */}
+          <Route index element={<DashboardPage />} /> {/* Vises på /dashboard */}
+          <Route path="analyser" element={<AnalysesPage />} /> {/* Vises på /dashboard/analyser */}
+          <Route path="boter" element={<BotsPage />} /> {/* Vises på /dashboard/boter */}
+          <Route path="modeller" element={<ModelsPage />} /> {/* Vises på /dashboard/modeller */}
+          <Route path="innstillinger" element={<SettingsPage />} /> {/* Vises på /dashboard/innstillinger */}
+        </Route>
 
-        {/* Catch-all rute for 404-sider */}
         <Route 
           path="*" 
           element={
