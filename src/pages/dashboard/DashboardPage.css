@@ -63,11 +63,13 @@
     font-size: 0.85rem;
 }
 
-/* Her er endringene for databoksen */
 .data-box {
-    background-color: var(--background-offwhite, #F9F9FD); /* Bruker den lyse offwhite/grå fargen */
-    color: var(--text-on-light-secondary, #555555);       /* Mørk tekstfarge */
-    border: 1px solid var(--border-color-light, #EAEAEA);  /* Subtil kantlinje */
+    background-color: #FFFBEB;  /* Varm, lys gul/oransje bakgrunn */
+    border: 1px solid #FEE38E;      /* Varm gul/oransje kantlinje */
+    
+    /* Tekstfarger beholdes som standard mørk for lesbarhet */
+    color: var(--text-on-light-secondary); 
+    
     padding: 1.5rem; 
     margin-top: 1rem;
     white-space: pre-wrap; 
@@ -81,8 +83,8 @@
     margin-top: 0;
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border-color-light, #f0f0f0);
-    color: var(--text-on-light-primary, #2C2C2C); /* Mørk overskrift */
+    border-bottom: 1px solid #FDE68A; /* Lysere variant av border for skillelinjen */
+    color: var(--text-on-light-primary); /* Beholder standard mørk overskriftfarge */
     font-family: var(--font-sans, sans-serif);
     font-size: 1.1rem;
     font-weight: 600;
@@ -91,5 +93,5 @@
 .data-box pre {
     margin: 0;
     font-size: 0.9rem;
-    color: var(--text-on-light-primary); /* Sørger for at JSON-teksten er mørk og lett leselig */
+    color: var(--text-on-light-primary); /* Beholder standard mørk tekstfarge */
 }
