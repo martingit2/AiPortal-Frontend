@@ -2,53 +2,41 @@
 import React from 'react';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
+import DashboardPage from './pages/DashboardPage'; // <--- IMPORTER DEN NYE FILEN
 import './App.css';
-import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react';
+import { SignedIn, SignedOut } from '@clerk/clerk-react'; // UserButton er ikke lenger nødvendig her
 
-const DashboardPage: React.FC = () => {
-  return (
-    <div style={{ padding: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h1>Velkommen til ditt Aracanix Dashboard!</h1>
-        <UserButton afterSignOutUrl="/" />
-      </div>
-      <p>Dette er en beskyttet side, kun tilgjengelig for innloggede brukere.</p>
-      <p>Her vil du kunne kontrollere boter, AI-modeller, se analyser og statistikk.</p>
-    </div>
-  );
-};
+// DashboardPage-komponenten er nå fjernet fra denne filen.
 
 function App() {
   return (
     <>
+      {/* Ingen global header her, siden hver side (LandingPage, DashboardPage) håndterer sin egen. */}
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        {/* Vi har fjernet /sign-in og /sign-up rutene her.
-            Clerk vil nå enten bruke sine hostede sider hvis en full omdirigering skjer,
-            eller bare vise modalen uten å matche en spesifikk React Router-rute.
-        */}
+        
+        {/* Beskyttet rute for Dashboard */}
         <Route
           path="/dashboard"
           element={
             <>
+              {/* Viser DashboardPage kun hvis brukeren er logget inn */}
               <SignedIn>
                 <DashboardPage />
               </SignedIn>
+              {/* Omdirigerer til forsiden hvis brukeren ikke er logget inn */}
               <SignedOut>
-                {/* Hvis brukeren ikke er logget inn og prøver å nå /dashboard,
-                    vil Clerk sin <SignedIn>/<SignedOut> logikk ofte håndtere
-                    omdirigering til pålogging (enten modal eller hostet side).
-                    En <Navigate to="/" /> er en trygg fallback her for å sende dem til forsiden.
-                */}
-                <Navigate to="/" replace />
+                <Navigate to="/" replace /> 
               </SignedOut>
             </>
           }
         />
+
+        {/* Catch-all rute for 404-sider */}
         <Route 
           path="*" 
           element={
-            <div style={{ textAlign: 'center', padding: '5rem' }}>
+            <div style={{ textAlign: 'center', padding: '5rem', fontFamily: 'sans-serif' }}>
               <h2>404 - Side ikke funnet</h2>
               <p>Beklager, vi fant ikke siden du lette etter.</p>
               <Link to="/" style={{color: 'var(--primary-purple)', textDecoration:'underline'}}>Tilbake til forsiden</Link>
