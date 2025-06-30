@@ -1,5 +1,7 @@
+// src/pages/dashboard/DashboardPage.tsx
 import React, { useEffect, useState } from 'react';
-import { UserButton, useAuth } from '@clerk/clerk-react';
+import { useAuth } from '@clerk/clerk-react';
+import './DashboardPage.css'; // Importer en dedikert CSS-fil for denne siden
 
 const DashboardPage: React.FC = () => {
     const { getToken, userId } = useAuth();
@@ -18,7 +20,7 @@ const DashboardPage: React.FC = () => {
                 }
 
                 // Kall det sikrede endepunktet på backenden
-                const response = await fetch('http://localhost:8080/api/v1/secure/me', { // SJEKK AT PORTEN ER KORREKT
+                const response = await fetch('http://localhost:8080/api/v1/secure/me', { // Pass på at porten (8080) er korrekt
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -42,38 +44,38 @@ const DashboardPage: React.FC = () => {
         };
 
         fetchSecureData();
-    }, [getToken]); // useEffect kjører når komponenten lastes og getToken-funksjonen er tilgjengelig
+    }, [getToken]);
 
     return (
-        <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-            <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
-                <h1>Aracanix Dashboard</h1>
-                <UserButton afterSignOutUrl="/" />
-            </header>
+        // Den ytre div-en er ikke lenger nødvendig siden DashboardLayout håndterer padding
+        // Men vi kan ha en wrapper hvis vi vil ha egne stiler for siden
+        <div className="dashboard-page">
+            <h1 className="dashboard-page-title">Dashboard Oversikt</h1>
             
-            <main>
+            {/* Midlertidig seksjon for å vise API-kommunikasjon */}
+            <div className="api-test-section">
                 <h2>Sikker API-kommunikasjon</h2>
                 <p>Her er data hentet fra et beskyttet endepunkt (`/api/v1/secure/me`) på din Spring Boot-server.</p>
 
-                {isLoading && <p>Laster sikret brukerdata fra backend...</p>}
+                {isLoading && <div className="loading-indicator">Laster sikret brukerdata...</div>}
                 
                 {error && (
-                    <div style={{ color: 'red', border: '1px solid red', padding: '1rem', marginTop: '1rem', whiteSpace: 'pre-wrap' }}>
+                    <div className="error-box">
                         <strong>Feil ved API-kall:</strong>
                         <pre>{error}</pre>
                     </div>
                 )}
                 
                 {userDataFromBackend && (
-                    <div style={{ backgroundColor: '#f0f0f0', border: '1px solid #ccc', padding: '1rem', marginTop: '1rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all', fontFamily: 'monospace', lineHeight: '1.6' }}>
+                    <div className="data-box">
                         <h3>Data mottatt fra Backend:</h3>
                         <pre>{JSON.stringify(userDataFromBackend, null, 2)}</pre>
                     </div>
                 )}
 
                 <hr style={{margin: '2rem 0'}} />
-                <p><strong>Clerk User ID (hentet fra frontend hook):</strong> {userId}</p>
-            </main>
+                <p><strong>Clerk User ID (fra frontend hook):</strong> {userId}</p>
+            </div>
         </div>
     );
 };
