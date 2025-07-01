@@ -1,0 +1,40 @@
+.tweet-feed-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tweet-card {
+  background-color: var(--background-light);
+  border: 1px solid var(--border-color-light);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+
+.tweet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.tweet-author {
+  font-weight: 600;
+  color: var(--primary-purple);
+}
+
+.tweet-time {
+  color: var(--text-on-light-secondary);
+}
+
+.tweet-content {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--text-on-light-primary);
+  white-space: pre-wrap; /* Beholder linjeskift fra tweeten */
+}
+
+/* Gjenbruker loading-state og empty-state fra BotsPage.css */
+/* Sørg for at de er tilgjengelige globalt eller kopier dem hit */

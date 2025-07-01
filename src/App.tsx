@@ -1,25 +1,35 @@
+// src/App.tsx
 import React from 'react';
-import { Routes, Route, Link, Navigate, Outlet } from 'react-router-dom';
+import { Routes, Route, Link, Navigate } from 'react-router-dom';
+
+// Importer hovedkomponenter/layouts
 import LandingPage from './pages/LandingPage';
+import DashboardLayout from './layouts/DashboardLayout';
+
+// Importer alle sidene som skal vises inne i dashboardet
+
+import BotsPage from './pages/dashboard/BotsPage';
+import DataFeedPage from './pages/dashboard/DataFeedPage'; // <-- Importerer den nye Data Feed-siden
+
+// Importer Clerk-komponenter for autentiseringssjekk
+import { SignedIn, SignedOut } from '@clerk/clerk-react';
 
 import './App.css';
-import { SignedIn, SignedOut } from '@clerk/clerk-react';
-import DashboardLayout from './layouts/DashboardLayout';
 import DashboardPage from './pages/dashboard/DashboardPage';
 
-// Lag en enkel placeholder for de andre sidene
-const AnalysesPage: React.FC = () => <h2>Mine Analyser</h2>;
-const BotsPage: React.FC = () => <h2>Mine Boter</h2>;
-const ModelsPage: React.FC = () => <h2>Mine Modeller</h2>;
-const SettingsPage: React.FC = () => <h2>Innstillinger</h2>;
+// Placeholder for sider som ikke er fullt implementert ennå
+const AnalysesPage: React.FC = () => <h1 className="dashboard-page-title">Mine Analyser (kommer snart)</h1>;
+const ModelsPage: React.FC = () => <h1 className="dashboard-page-title">Mine Modeller (kommer snart)</h1>;
+const SettingsPage: React.FC = () => <h1 className="dashboard-page-title">Innstillinger (kommer snart)</h1>;
 
 function App() {
   return (
     <>
       <Routes>
+        {/* Offentlig rute for landingssiden */}
         <Route path="/" element={<LandingPage />} />
         
-        {/* Beskyttet rute som bruker DashboardLayout */}
+        {/* Beskyttet rute for hele dashboardet som bruker DashboardLayout */}
         <Route
           path="/dashboard"
           element={
@@ -33,14 +43,19 @@ function App() {
             </>
           }
         >
-          {/* "Nested" ruter. Disse vil bli rendret inne i DashboardLayout's <Outlet /> */}
+          {/* 
+            "Nested" ruter. 
+            Disse vil bli rendret inne i DashboardLayout's <Outlet />-komponent.
+          */}
           <Route index element={<DashboardPage />} /> {/* Vises på /dashboard */}
-          <Route path="analyser" element={<AnalysesPage />} /> {/* Vises på /dashboard/analyser */}
-          <Route path="boter" element={<BotsPage />} /> {/* Vises på /dashboard/boter */}
-          <Route path="modeller" element={<ModelsPage />} /> {/* Vises på /dashboard/modeller */}
+          <Route path="analyser" element={<AnalysesPage />} />  {/* Vises på /dashboard/analyser */}
+          <Route path="boter" element={<BotsPage />} />      {/* Vises på /dashboard/boter */}
+          <Route path="data-feed" element={<DataFeedPage />} />  {/* Vises på /dashboard/data-feed */}
+          <Route path="modeller" element={<ModelsPage />} />  {/* Vises på /dashboard/modeller */}
           <Route path="innstillinger" element={<SettingsPage />} /> {/* Vises på /dashboard/innstillinger */}
         </Route>
 
+        {/* Catch-all rute for 404 - sider som ikke finnes */}
         <Route 
           path="*" 
           element={

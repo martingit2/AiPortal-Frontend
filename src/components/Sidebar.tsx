@@ -1,16 +1,17 @@
+// src/components/Sidebar.tsx
 import React from 'react';
 import { NavLink } from 'react-router-dom'; // Bruk NavLink for aktiv-state styling
-import { LayoutDashboard, BarChart3, Bot, BrainCircuit, Settings } from 'lucide-react';
+import { LayoutDashboard, BarChart3, Bot, BrainCircuit, Settings, MessageSquare } from 'lucide-react';
 import './Sidebar.css'; // Dedikert CSS for sidebaren
 
 const Sidebar: React.FC = () => {
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        Aracanix {/* Du kan også ha en logo-ikon her */}
+        Aracanix
       </div>
       <nav className="sidebar-nav">
-        <NavLink to="/dashboard" end> {/* 'end' prop er viktig for rot-lenken */}
+        <NavLink to="/dashboard" end> {/* 'end' prop sikrer at denne kun er aktiv på nøyaktig /dashboard */}
           <LayoutDashboard size={20} />
           <span>Dashboard</span>
         </NavLink>
@@ -22,12 +23,18 @@ const Sidebar: React.FC = () => {
           <Bot size={20} />
           <span>Boter</span>
         </NavLink>
+        <NavLink to="/dashboard/data-feed"> {/* NY LENKE */}
+          <MessageSquare size={20} />
+          <span>Data Feed</span>
+        </NavLink>
         <NavLink to="/dashboard/modeller">
           <BrainCircuit size={20} />
           <span>Modeller</span>
         </NavLink>
-        {/* Skillelinje */}
+        
+        {/* Skillelinje for å separere hovednavigasjon fra innstillinger etc. */}
         <hr className="sidebar-divider" /> 
+        
         <NavLink to="/dashboard/innstillinger">
           <Settings size={20} />
           <span>Innstillinger</span>

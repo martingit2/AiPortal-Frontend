@@ -1,0 +1,244 @@
+/* src/pages/dashboard/BotsPage.css */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+/* Bruker den globale stilen for .dashboard-page-title fra en annen fil,
+   men vi kan definere den her også for å være sikker. */
+.dashboard-page-title {
+    margin: 0;
+    font-family: var(--font-display, sans-serif);
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--text-on-light-primary, #2C2C2C);
+}
+
+/* Stil for den spesielle "Opprett Ny Bot"-knappen */
+.cta-button-outlined {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  padding: 0.7rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  
+  background-color: #293846; /* Samme farge som fokusert searchbar */
+  color: #dfe4ed; /* Lys tekstfarge */
+  
+  /* --accent-color-highlight og --accent-color-highlight-rgb må være definert i en global CSS-fil (f.eks. LandingPage.css) */
+  border: 2px solid var(--accent-color-highlight, #4DB6AC); 
+  
+  transition: all 0.2s ease-in-out;
+}
+
+.cta-button-outlined:hover {
+  background-color: #334354; /* Litt mørkere ved hover */
+  border-color: var(--accent-color-highlight, #4DB6AC); 
+  color: #ffffff; 
+  box-shadow: 0 0 10px rgba(var(--accent-color-highlight-rgb, 77, 182, 172), 0.5); 
+  transform: translateY(-2px); 
+}
+
+
+/* Stil for når listen er tom */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: var(--background-light);
+    border: 1px dashed var(--border-color-light, #EAEAEA);
+    border-radius: 12px;
+    color: var(--text-on-light-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.empty-state svg { /* Gjelder Bot-ikonet */
+    color: var(--neutral-medium);
+    margin-bottom: 1rem;
+}
+.empty-state h3 {
+    color: var(--text-on-light-primary);
+    font-family: var(--font-display);
+    margin-bottom: 0.5rem;
+}
+.empty-state .cta-button-outlined { /* Bruker den nye klassen her også */
+    margin-top: 1.5rem;
+}
+
+/* Rutenett for bot-kortene */
+.bots-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.bot-card {
+    background-color: var(--background-light);
+    border: 1px solid var(--border-color-light);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(44, 44, 44, 0.04);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+.bot-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 7px 14px rgba(44, 44, 44, 0.06);
+}
+
+.bot-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color-light);
+}
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    cursor: help; /* Viser at man kan holde over for info */
+}
+.status-indicator.status-active { background-color: #2ecc71; }
+.status-indicator.status-paused { background-color: #f1c40f; }
+.status-indicator.status-error { background-color: #e74c3c; }
+
+.bot-name {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-on-light-primary);
+    margin: 0;
+    flex-grow: 1; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bot-type {
+    font-size: 0.8rem;
+    color: var(--text-on-light-secondary);
+    background-color: var(--background-offwhite);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.bot-card-body {
+    padding: 1.25rem;
+    font-size: 0.9rem;
+    color: var(--text-on-light-secondary);
+    flex-grow: 1; 
+}
+.bot-card-body p {
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    justify-content: space-between;
+}
+.bot-card-body p:last-child {
+    margin-bottom: 0;
+}
+.bot-card-body p strong {
+    color: var(--text-on-light-primary);
+    margin-right: 0.5rem;
+}
+.bot-card-body p span {
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bot-card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 0 1.25rem 1rem;
+    border-top: 1px solid var(--border-color-light);
+    padding-top: 1rem;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color-light);
+    background-color: transparent;
+    color: var(--text-on-light-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-btn:hover {
+    background-color: var(--background-offwhite);
+    border-color: #ccc;
+}
+
+.action-btn.delete-btn:hover {
+    background-color: #fbeae5;
+    color: #c0392b;
+    border-color: #f5c6cb;
+}
+
+.action-btn.toggle-btn:hover {
+    background-color: #e8f4fd;
+    color: #2980b9;
+    border-color: #a9d6f5;
+}
+
+
+/* Stil for laste-tilstand og fullside-feil */
+.loading-state, .full-page-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 50vh;
+    color: var(--text-on-light-secondary);
+}
+
+.loading-spinner {
+    animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.full-page-error {
+    background-color: #fbeae5;
+    border: 1px solid #e74c3c;
+    color: #c0392b;
+    border-radius: 8px;
+    padding: 2rem;
+}
+
+.full-page-error p {
+    color: #c0392b;
+}
+
+/* Bruker den globale .cta-button.secondary-stilen for "Prøv igjen" */
+.full-page-error .cta-button.secondary {
+    margin-top: 1rem;
+    border-color: #c0392b;
+    color: #c0392b;
+}
+.full-page-error .cta-button.secondary:hover {
+    background-color: #c0392b;
+    color: #ffffff;
+}
