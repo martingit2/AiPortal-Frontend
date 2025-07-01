@@ -1,0 +1,39 @@
+.searchbar-form {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 500px; /* Du kan justere denne for å gjøre den bredere/smalere */
+}
+
+.searchbar-icon {
+  position: absolute;
+  left: 1rem;
+  color: #7a8aa0; /* Lys, dempet grå/blå for ikonet */
+  pointer-events: none;
+}
+
+.searchbar-input {
+  width: 100%;
+  padding: 0.6rem 1rem 0.6rem 2.75rem; 
+  border-radius: 8px;
+  border: 1px solid #2f4050; /* Samme farge som header-border */
+  background-color: #293846; 
+  color: #dfe4ed; 
+  font-family: var(--font-sans, sans-serif);
+  font-size: 0.9rem;
+  transition: all 0.2s ease-in-out;
+  outline: none; /* Fjerner standard outline */
+}
+
+.searchbar-input::placeholder {
+  color: #7a8aa0;
+  opacity: 1;
+}
+
+/* ENDRING HER: Justert fokus-effekt */
+.searchbar-input:focus {
+  border-color: var(--accent-color-highlight, #80CBC4); /* Bruker en subtil turkis/mint-farge */
+  background-color: #334354; /* Gjør bakgrunnen litt mørkere ved fokus */
+  /* box-shadow er fjernet */
+}

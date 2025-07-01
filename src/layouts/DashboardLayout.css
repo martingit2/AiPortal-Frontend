@@ -1,32 +1,49 @@
+/* src/layouts/DashboardLayout.css */
+
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
-  background-color: #f4f7f9; /* En lys grå bakgrunn for innholdsområdet */
+  background-color: #f4f7f9;
 }
 
 .dashboard-main-content {
-  flex-grow: 1; /* Tar resten av plassen */
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
 
+/* Her kommer de viktige endringene for headeren */
 .dashboard-header {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end; /* Justerer elementer til høyre */
-  padding: 1rem 2rem;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e0e0e0;
-  height: 60px; /* Fast høyde for header */
+  display: flex; /* Bruk flexbox */
+  align-items: center; /* Vertikal sentrering */
+  padding: 0 2rem; /* Sidepadding */
+  gap: 1.5rem; /* Avstand mellom elementer */
+  
+  background-color: #1a222e;
+  border-bottom: 1px solid #2f4050;
+  height: 64px;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
-.header-spacer {
-  flex-grow: 1; /* Tomt element som skyver UserButton til høyre */
+/* Plasserer søkebaren i midten */
+.dashboard-header .searchbar-form {
+  /* Denne kombinasjonen er nøkkelen: */
+  margin-left: auto;  /* Skyver den vekk fra alt til venstre */
+  margin-right: auto; /* Skyver den vekk fra alt til høyre */
+  
+  width: 100%; /* La den prøve å ta plassen */
+  max-width: 500px; /* Men ikke bli for bred */
+}
+
+/* Plassering av UserButton (ingen endring nødvendig her) */
+.user-button-wrapper {
+  display: flex;
+  align-items: center;
 }
 
 .dashboard-page-content {
   padding: 2rem;
   flex-grow: 1;
-  overflow-y: auto; /* Scrollbar hvis innholdet er for langt */
+  overflow-y: auto; 
 }

@@ -1,23 +1,24 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom'; // VIKTIG for å vise "nested" ruter
-
-import { UserButton } from '@clerk/clerk-react';
-import './DashboardLayout.css'; // Dedikert CSS for layouten
+import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import Searchbar from '../components/Searchbar';
+import { UserButton } from '@clerk/clerk-react';
+import './DashboardLayout.css';
 
 const DashboardLayout: React.FC = () => {
   return (
     <div className="dashboard-layout">
-      <Sidebar
-       />
+      <Sidebar />
       <div className="dashboard-main-content">
         <header className="dashboard-header">
-          {/* Du kan ha en global søkeboks eller andre elementer her */}
-          <div className="header-spacer"></div> {/* For å skyve UserButton til høyre */}
-          <UserButton afterSignOutUrl="/" />
+          {/* Ingen tom div her lenger */}
+          <Searchbar />
+          <div className="user-button-wrapper">
+            <UserButton afterSignOutUrl="/" />
+          </div>
         </header>
         <main className="dashboard-page-content">
-          <Outlet /> {/* Her vil DashboardHomePage, AnalysesPage etc. bli rendret */}
+          <Outlet />
         </main>
       </div>
     </div>
