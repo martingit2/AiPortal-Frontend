@@ -1,16 +1,17 @@
 // src/pages/dashboard/DataFeedPage.tsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@clerk/clerk-react';
-import { MessageSquare, RefreshCw, AlertTriangle, Bot } from 'lucide-react'; // Importer Bot-ikonet
+import { MessageSquare, RefreshCw, AlertTriangle, Bot, PlayCircle } from 'lucide-react';
 import './DataFeedPage.css';
 
 // Oppdatert type for å matche TweetDto fra backend
 interface TweetDto {
-  id: number;
+  id: number; // ID fra vår database, for å starte analyse
+  tweetId: string; // Selve Twitter-IDen, for lenker
   authorUsername: string;
   content: string;
   tweetedAt: string;
-  sourceBotName: string; // Det nye, viktige feltet
+  sourceBotName: string;
 }
 
 // Type for den paginerte responsen
@@ -32,7 +33,6 @@ const DataFeedPage: React.FC = () => {
     setError(null);
     try {
       const token = await getToken();
-      // Henter de 50 siste tweetene
       const response = await fetch('http://localhost:8080/api/v1/tweets?page=0&size=50', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -51,6 +51,28 @@ const DataFeedPage: React.FC = () => {
   useEffect(() => {
     fetchTweets();
   }, [fetchTweets]);
+
+  const handleStartAnalysis = async (tweetDataId: number) => {
+    if (!window.confirm("Starte en ordtellingsanalyse for denne tweeten?")) return;
+    
+    try {
+      const token = await getToken();
+      const response = await fetch('http://localhost:8080/api/v1/analyses/word-count', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tweetId: tweetDataId }), // Sender IDen fra vår database
+      });
+      if (!response.ok) {
+        throw new Error('Kunne ikke starte analyse.');
+      }
+      alert("Analyse startet! Gå til 'Mine Analyser' for å se status.");
+    } catch (err: any) {
+      alert("Feil: " + err.message);
+    }
+  };
 
   const renderContent = () => {
     if (isLoading) {
@@ -96,7 +118,6 @@ const DataFeedPage: React.FC = () => {
               >
                 @{tweet.authorUsername}
               </a>
-              {/* Viser hvilken bot som hentet dataen */}
               <div className="tweet-source-bot" title={`Hentet av boten: ${tweet.sourceBotName}`}>
                 <Bot size={14} />
                 <span>{tweet.sourceBotName}</span>
@@ -104,9 +125,23 @@ const DataFeedPage: React.FC = () => {
             </div>
             <p className="tweet-content">{tweet.content}</p>
             <div className="tweet-footer">
-                <span className="tweet-time" title={new Date(tweet.tweetedAt).toISOString()}>
+                <a 
+                    href={`https://twitter.com/${tweet.authorUsername}/status/${tweet.tweetId}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="tweet-time"
+                    title={new Date(tweet.tweetedAt).toISOString()}
+                >
                     {new Date(tweet.tweetedAt).toLocaleString('no-NO')}
-                </span>
+                </a>
+              <button 
+                className="action-btn analyze-btn" 
+                title="Start analyse"
+                onClick={() => handleStartAnalysis(tweet.id)}
+              >
+                <PlayCircle size={16} />
+                <span>Analyser</span>
+              </button>
             </div>
           </div>
         ))}

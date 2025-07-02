@@ -7,9 +7,10 @@ import LandingPage from './pages/LandingPage';
 import DashboardLayout from './layouts/DashboardLayout';
 
 // Importer alle sidene som skal vises inne i dashboardet
-
+;
 import BotsPage from './pages/dashboard/BotsPage';
-import DataFeedPage from './pages/dashboard/DataFeedPage'; // <-- Importerer den nye Data Feed-siden
+import DataFeedPage from './pages/dashboard/DataFeedPage';
+import AnalysesPage from './pages/dashboard/AnalysesPage'; // Importerer den nye siden
 
 // Importer Clerk-komponenter for autentiseringssjekk
 import { SignedIn, SignedOut } from '@clerk/clerk-react';
@@ -18,7 +19,6 @@ import './App.css';
 import DashboardPage from './pages/dashboard/DashboardPage';
 
 // Placeholder for sider som ikke er fullt implementert ennå
-const AnalysesPage: React.FC = () => <h1 className="dashboard-page-title">Mine Analyser (kommer snart)</h1>;
 const ModelsPage: React.FC = () => <h1 className="dashboard-page-title">Mine Modeller (kommer snart)</h1>;
 const SettingsPage: React.FC = () => <h1 className="dashboard-page-title">Innstillinger (kommer snart)</h1>;
 
@@ -43,16 +43,13 @@ function App() {
             </>
           }
         >
-          {/* 
-            "Nested" ruter. 
-            Disse vil bli rendret inne i DashboardLayout's <Outlet />-komponent.
-          */}
-          <Route index element={<DashboardPage />} /> {/* Vises på /dashboard */}
-          <Route path="analyser" element={<AnalysesPage />} />  {/* Vises på /dashboard/analyser */}
-          <Route path="boter" element={<BotsPage />} />      {/* Vises på /dashboard/boter */}
-          <Route path="data-feed" element={<DataFeedPage />} />  {/* Vises på /dashboard/data-feed */}
-          <Route path="modeller" element={<ModelsPage />} />  {/* Vises på /dashboard/modeller */}
-          <Route path="innstillinger" element={<SettingsPage />} /> {/* Vises på /dashboard/innstillinger */}
+          {/* "Nested" ruter */}
+          <Route index element={<DashboardPage />} />
+          <Route path="analyser" element={<AnalysesPage />} />
+          <Route path="boter" element={<BotsPage />} />
+          <Route path="data-feed" element={<DataFeedPage />} />
+          <Route path="modeller" element={<ModelsPage />} />
+          <Route path="innstillinger" element={<SettingsPage />} />
         </Route>
 
         {/* Catch-all rute for 404 - sider som ikke finnes */}

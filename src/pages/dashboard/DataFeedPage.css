@@ -16,7 +16,7 @@
 
 .tweet-header {
   display: flex;
-  flex-wrap: wrap; /* Sørger for at elementer kan wrappe på små skjermer */
+  flex-wrap: wrap; 
   justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
@@ -52,7 +52,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 150px; /* Forhindrer at lange bot-navn ødelegger layout */
+    max-width: 150px; 
 }
 
 
@@ -60,79 +60,47 @@
   margin: 0;
   line-height: 1.6;
   color: var(--text-on-light-primary);
-  white-space: pre-wrap; /* Beholder linjeskift fra tweeten */
+  white-space: pre-wrap; 
   font-size: 0.95rem;
 }
 
 .tweet-footer {
     margin-top: 1rem;
-    text-align: right;
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
     font-size: 0.8rem;
     color: var(--neutral-medium);
 }
+.tweet-time {
+    color: var(--neutral-medium);
+    text-decoration: none;
+}
+.tweet-time:hover {
+    text-decoration: underline;
+    color: var(--primary-purple);
+}
 
-/* Gjenbruker loading-state og empty-state fra BotsPage.css. 
-   Sørg for at de er tilgjengelige globalt eller kopier dem hit.
-   Her er en kopi for fullstendighet: */
-
-.loading-state, .full-page-error {
+/* Gjenbruker action-btn fra BotsPage.css - sørg for at den er globalt tilgjengelig eller kopier hit */
+.action-btn {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    min-height: 50vh;
+    gap: 0.4rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border-color-light);
+    background-color: transparent;
     color: var(--text-on-light-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
 }
-
-.loading-spinner {
-    animation: spin 1.5s linear infinite;
+.action-btn:hover {
+    background-color: var(--background-offwhite);
+    border-color: #ccc;
 }
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.full-page-error {
-    background-color: #fbeae5;
-    border: 1px solid #e74c3c;
-    color: #c0392b;
-    border-radius: 8px;
-    padding: 2rem;
-}
-
-.full-page-error p {
-    color: #c0392b;
-}
-
-.full-page-error .cta-button.secondary {
-    margin-top: 1rem;
-    border-color: #c0392b;
-    color: #c0392b;
-}
-.full-page-error .cta-button.secondary:hover {
-    background-color: #c0392b;
-    color: #ffffff;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 4rem 2rem;
-    background-color: var(--background-light);
-    border: 1px dashed var(--border-color-light);
-    border-radius: 12px;
-    color: var(--text-on-light-secondary);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.empty-state svg { 
-    color: var(--neutral-medium);
-    margin-bottom: 1rem;
-}
-.empty-state h3 {
-    color: var(--text-on-light-primary);
-    font-family: var(--font-display);
-    margin-bottom: 0.5rem;
+.analyze-btn:hover {
+    color: var(--primary-purple);
+    border-color: var(--primary-purple);
+    background-color: rgba(var(--primary-purple-rgb), 0.1);
 }
