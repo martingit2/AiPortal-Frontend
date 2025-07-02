@@ -1,3 +1,5 @@
+/* src/pages/dashboard/DataFeedPage.css */
+
 .tweet-feed-container {
   display: flex;
   flex-direction: column;
@@ -8,33 +10,129 @@
   background-color: var(--background-light);
   border: 1px solid var(--border-color-light);
   border-radius: 8px;
-  padding: 1rem 1.25rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+  padding: 1.25rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.04);
 }
 
 .tweet-header {
   display: flex;
+  flex-wrap: wrap; /* Sørger for at elementer kan wrappe på små skjermer */
   justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
   margin-bottom: 0.75rem;
-  font-size: 0.85rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color-light);
 }
 
 .tweet-author {
   font-weight: 600;
   color: var(--primary-purple);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.tweet-author:hover {
+    text-decoration: underline;
 }
 
-.tweet-time {
+.tweet-source-bot {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
   color: var(--text-on-light-secondary);
+  background-color: var(--background-offwhite);
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
 }
+.tweet-source-bot svg {
+    flex-shrink: 0;
+}
+.tweet-source-bot span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px; /* Forhindrer at lange bot-navn ødelegger layout */
+}
+
 
 .tweet-content {
   margin: 0;
   line-height: 1.6;
   color: var(--text-on-light-primary);
   white-space: pre-wrap; /* Beholder linjeskift fra tweeten */
+  font-size: 0.95rem;
 }
 
-/* Gjenbruker loading-state og empty-state fra BotsPage.css */
-/* Sørg for at de er tilgjengelige globalt eller kopier dem hit */
+.tweet-footer {
+    margin-top: 1rem;
+    text-align: right;
+    font-size: 0.8rem;
+    color: var(--neutral-medium);
+}
+
+/* Gjenbruker loading-state og empty-state fra BotsPage.css. 
+   Sørg for at de er tilgjengelige globalt eller kopier dem hit.
+   Her er en kopi for fullstendighet: */
+
+.loading-state, .full-page-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 50vh;
+    color: var(--text-on-light-secondary);
+}
+
+.loading-spinner {
+    animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.full-page-error {
+    background-color: #fbeae5;
+    border: 1px solid #e74c3c;
+    color: #c0392b;
+    border-radius: 8px;
+    padding: 2rem;
+}
+
+.full-page-error p {
+    color: #c0392b;
+}
+
+.full-page-error .cta-button.secondary {
+    margin-top: 1rem;
+    border-color: #c0392b;
+    color: #c0392b;
+}
+.full-page-error .cta-button.secondary:hover {
+    background-color: #c0392b;
+    color: #ffffff;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: var(--background-light);
+    border: 1px dashed var(--border-color-light);
+    border-radius: 12px;
+    color: var(--text-on-light-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.empty-state svg { 
+    color: var(--neutral-medium);
+    margin-bottom: 1rem;
+}
+.empty-state h3 {
+    color: var(--text-on-light-primary);
+    font-family: var(--font-display);
+    margin-bottom: 0.5rem;
+}

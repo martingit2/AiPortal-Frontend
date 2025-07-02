@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@clerk/clerk-react';
-import { Bot, Trash2, Play, Pause, PlusCircle, RefreshCw, AlertTriangle } from 'lucide-react'; // Importer flere ikoner
+import { Bot, Trash2, Play, Pause, PlusCircle, RefreshCw, AlertTriangle } from 'lucide-react';
 import './BotsPage.css';
 import CreateBotModal from '../../components/CreateBotModal';
 
@@ -48,6 +48,14 @@ const BotsPage: React.FC = () => {
   // Håndter statusendring (Start/Stopp)
   const handleToggleStatus = async (botId: number, currentStatus: BotConfig['status']) => {
     const newStatus = currentStatus === 'ACTIVE' ? 'PAUSED' : 'ACTIVE';
+    
+    // Oppdater UI umiddelbart for en responsiv følelse
+    setBots(currentBots => 
+      currentBots.map(bot => 
+        bot.id === botId ? { ...bot, status: newStatus } : bot
+      )
+    );
+
     try {
       const token = await getToken();
       const response = await fetch(`http://localhost:8080/api/v1/bots/${botId}/status`, {
@@ -60,23 +68,30 @@ const BotsPage: React.FC = () => {
       });
 
       if (!response.ok) {
+        // Hvis API-kallet feiler, rull tilbake UI-endringen
+        setBots(currentBots =>
+          currentBots.map(bot => 
+            bot.id === botId ? { ...bot, status: currentStatus } : bot
+          )
+        );
         throw new Error('Kunne ikke oppdatere bot-status.');
       }
-
-      // Oppdater listen for å reflektere endringen umiddelbart
-      fetchBots(); 
+      // Ikke nødvendig å kalle fetchBots() på nytt hvis vi stoler på den optimistiske oppdateringen
     } catch (err: any) {
       console.error("Feil ved statusendring:", err);
-      setError(err.message); // Vis feil til brukeren
+      setError(err.message); 
     }
   };
 
   // Håndter sletting
   const handleDeleteBot = async (botId: number) => {
-    // Legg til en bekreftelsesdialog for sikkerhets skyld
     if (!window.confirm("Er du sikker på at du vil slette denne boten? Handlingen kan ikke angres.")) {
       return;
     }
+
+    // Oppdater UI umiddelbart (optimistisk sletting)
+    const originalBots = bots;
+    setBots(currentBots => currentBots.filter(bot => bot.id !== botId));
 
     try {
       const token = await getToken();
@@ -88,20 +103,15 @@ const BotsPage: React.FC = () => {
       });
 
       if (!response.ok) {
-        // response.ok er false for statuskoder som 4xx, 5xx. 204 er ok.
-        if (response.status === 404) {
-          throw new Error('Boten ble ikke funnet.');
-        }
+        // Rull tilbake hvis sletting feiler
+        setBots(originalBots);
         throw new Error('Kunne ikke slette boten.');
       }
-      
-      // Suksess (serveren svarer med 204 No Content)
-      // Oppdater UI ved å hente bot-listen på nytt
-      fetchBots();
-
+      // Suksess, UI er allerede oppdatert
     } catch (err: any) {
       console.error("Feil ved sletting:", err);
       setError(err.message);
+      setBots(originalBots); // Rull tilbake UI
     }
   };
 

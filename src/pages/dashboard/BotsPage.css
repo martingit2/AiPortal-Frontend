@@ -7,14 +7,8 @@
     margin-bottom: 2rem;
 }
 
-/* Bruker den globale stilen for .dashboard-page-title fra en annen fil,
-   men vi kan definere den her også for å være sikker. */
 .dashboard-page-title {
-    margin: 0;
-    font-family: var(--font-display, sans-serif);
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--text-on-light-primary, #2C2C2C);
+    margin: 0; 
 }
 
 /* Stil for den spesielle "Opprett Ny Bot"-knappen */
@@ -30,17 +24,16 @@
   font-size: 0.9rem;
   cursor: pointer;
   
-  background-color: #293846; /* Samme farge som fokusert searchbar */
-  color: #dfe4ed; /* Lys tekstfarge */
+  background-color: #293846;
+  color: #dfe4ed;
   
-  /* --accent-color-highlight og --accent-color-highlight-rgb må være definert i en global CSS-fil (f.eks. LandingPage.css) */
-  border: 2px solid var(--accent-color-highlight, #4DB6AC); 
+  border: 2px solid var(--accent-color-highlight, #4DB6AC);
   
   transition: all 0.2s ease-in-out;
 }
 
 .cta-button-outlined:hover {
-  background-color: #334354; /* Litt mørkere ved hover */
+  background-color: #334354;
   border-color: var(--accent-color-highlight, #4DB6AC); 
   color: #ffffff; 
   box-shadow: 0 0 10px rgba(var(--accent-color-highlight-rgb, 77, 182, 172), 0.5); 
@@ -53,14 +46,14 @@
     text-align: center;
     padding: 4rem 2rem;
     background-color: var(--background-light);
-    border: 1px dashed var(--border-color-light, #EAEAEA);
+    border: 1px dashed var(--border-color-light);
     border-radius: 12px;
     color: var(--text-on-light-secondary);
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.empty-state svg { /* Gjelder Bot-ikonet */
+.empty-state svg {
     color: var(--neutral-medium);
     margin-bottom: 1rem;
 }
@@ -69,7 +62,7 @@
     font-family: var(--font-display);
     margin-bottom: 0.5rem;
 }
-.empty-state .cta-button-outlined { /* Bruker den nye klassen her også */
+.empty-state .cta-button-outlined {
     margin-top: 1.5rem;
 }
 
@@ -84,14 +77,14 @@
     background-color: var(--background-light);
     border: 1px solid var(--border-color-light);
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(44, 44, 44, 0.04);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.04);
     display: flex;
     flex-direction: column;
     transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 .bot-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 7px 14px rgba(44, 44, 44, 0.06);
+    box-shadow: 0 7px 14px rgba(0,0,0,0.06);
 }
 
 .bot-card-header {
@@ -107,7 +100,7 @@
     height: 10px;
     border-radius: 50%;
     flex-shrink: 0;
-    cursor: help; /* Viser at man kan holde over for info */
+    cursor: help;
 }
 .status-indicator.status-active { background-color: #2ecc71; }
 .status-indicator.status-paused { background-color: #f1c40f; }
