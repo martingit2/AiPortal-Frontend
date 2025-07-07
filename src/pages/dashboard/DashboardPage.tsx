@@ -15,6 +15,8 @@ const DashboardPage: React.FC = () => {
             try {
                 // Hent JWT-tokenet fra Clerk
                 const token = await getToken();
+                console.log("Clerk JWT Token:", token);
+            
                 if (!token) {
                     throw new Error("Kunne ikke hente autentiseringstoken.");
                 }

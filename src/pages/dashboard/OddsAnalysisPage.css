@@ -1,0 +1,59 @@
+/* src/pages/dashboard/OddsAnalysisPage.css */
+
+.table-container {
+    overflow-x: auto; /* Gjør tabellen scrollbar på små skjermer */
+    background-color: var(--background-light);
+    border: 1px solid var(--border-color-light);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color-light);
+}
+
+thead th {
+    font-family: var(--font-display, sans-serif);
+    font-weight: 600;
+    color: var(--text-on-light-secondary);
+    background-color: var(--background-offwhite);
+    white-space: nowrap;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background-color: var(--background-offwhite);
+}
+
+.value-col {
+    text-align: right;
+    font-weight: 600;
+    width: 100px; /* Gir kolonnene en fast bredde */
+}
+
+.value-cell {
+    text-align: right;
+    font-weight: 600;
+}
+
+/* Fargelegging for value-celler */
+.value-cell.value-medium {
+    background-color: rgba(46, 204, 113, 0.1); /* Svak grønn */
+    color: #27ae60;
+}
+
+.value-cell.value-high {
+    background-color: rgba(46, 204, 113, 0.25); /* Sterkere grønn */
+    color: #27ae60;
+}
