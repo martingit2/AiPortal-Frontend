@@ -33,7 +33,8 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    // For select, må vi kanskje "caste" typen for å tilfredsstille TypeScript
+    setFormData(prev => ({ ...prev, [name]: value as BotFormData[keyof BotFormData] }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,7 +58,7 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
       }
 
       // Suksess!
-      onBotCreated(); // Kall funksjonen for å hente bot-listen på nytt
+      onBotCreated(); // Oppdater bot-listen i parent-komponenten
       onClose(); // Lukk modalen
       // Nullstill skjemaet for neste gang
       setFormData({ name: '', sourceType: 'TWITTER', sourceIdentifier: '' });
@@ -87,6 +88,7 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
               onChange={handleChange}
               placeholder="F.eks. 'Fotballnyheter fra Romano'"
               required
+              disabled={isSubmitting}
             />
           </div>
           <div className="form-group">
@@ -97,6 +99,7 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
               value={formData.sourceType}
               onChange={handleChange}
               required
+              disabled={isSubmitting}
             >
               <option value="TWITTER">Twitter</option>
               <option value="SPORT_API">Sport API</option>
@@ -112,8 +115,9 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
               name="sourceIdentifier"
               value={formData.sourceIdentifier}
               onChange={handleChange}
-              placeholder="F.eks. 'FabrizioRomano' eller 'TSLA'"
+              placeholder="F.eks. 'FabrizioRomano' eller '39:2020:33'"
               required
+              disabled={isSubmitting}
             />
           </div>
           {error && <p className="form-error">{error}</p>}
@@ -121,7 +125,8 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
             <button type="button" className="action-btn" onClick={onClose} disabled={isSubmitting}>
               Avbryt
             </button>
-            <button type="submit" className="cta-button primary" disabled={isSubmitting}>
+            {/* ENDRING HER: Bruker .cta-button-outlined for konsistens */}
+            <button type="submit" className="cta-button-outlined" disabled={isSubmitting}>
               {isSubmitting ? 'Lagrer...' : 'Lagre Bot'}
             </button>
           </div>

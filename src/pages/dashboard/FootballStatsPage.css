@@ -1,0 +1,45 @@
+.stats-table-container {
+    background-color: var(--background-light);
+    border: 1px solid var(--border-color-light);
+    border-radius: 8px;
+    overflow-x: auto; /* For responsivitet på små skjermer */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse; /* Fjerner mellomrom mellom celler */
+    text-align: left;
+}
+
+.stats-table th,
+.stats-table td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color-light);
+}
+
+.stats-table thead {
+    background-color: var(--background-offwhite);
+}
+
+.stats-table th {
+    font-family: var(--font-display, sans-serif);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-on-light-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stats-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.stats-table tbody tr:hover {
+    background-color: var(--background-offwhite);
+}
+
+.stats-table td {
+    color: var(--text-on-light-primary);
+    font-size: 0.95rem;
+}

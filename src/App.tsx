@@ -17,6 +17,7 @@ import { SignedIn, SignedOut } from '@clerk/clerk-react';
 
 import './App.css';
 import DashboardPage from './pages/dashboard/DashboardPage';
+import FootballStatsPage from './pages/dashboard/FootballStatsPage';
 
 // Placeholder for sider som ikke er fullt implementert ennå
 const ModelsPage: React.FC = () => <h1 className="dashboard-page-title">Mine Modeller (kommer snart)</h1>;
@@ -48,6 +49,7 @@ function App() {
           <Route path="analyser" element={<AnalysesPage />} />
           <Route path="boter" element={<BotsPage />} />
           <Route path="data-feed" element={<DataFeedPage />} />
+          <Route path="fotball-stats" element={<FootballStatsPage />} />
           <Route path="modeller" element={<ModelsPage />} />
           <Route path="innstillinger" element={<SettingsPage />} />
         </Route>
