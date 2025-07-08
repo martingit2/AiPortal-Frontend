@@ -1,34 +1,89 @@
-.stats-table-container {
+/* src/pages/dashboard/FootballStatsPage.css */
+
+.stats-groups-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Avstand mellom hver liga-seksjon */
+}
+
+.league-section {
     background-color: var(--background-light);
     border: 1px solid var(--border-color-light);
     border-radius: 8px;
-    overflow-x: auto; /* For responsivitet på små skjermer */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    overflow: hidden; /* For pene, avrundede kanter */
+}
+
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--background-offwhite);
+    border: none;
+    border-bottom: 1px solid var(--border-color-light);
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s ease;
+}
+.accordion-header:hover {
+    background-color: #eef2f7;
+}
+
+.accordion-header h3 {
+    margin: 0;
+    font-family: var(--font-display, sans-serif);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-on-light-primary);
+}
+
+.accordion-chevron {
+    transition: transform 0.3s ease;
+    color: var(--neutral-medium);
+}
+
+.accordion-chevron.open {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    /* Denne wrapperen trengs ikke lenger å ha padding, lar tabellen styre det. */
+}
+
+/* Tabell-styling */
+.stats-table-container {
+    overflow-x: auto; /* For mobile enheter */
 }
 
 .stats-table {
     width: 100%;
-    border-collapse: collapse; /* Fjerner mellomrom mellom celler */
-    text-align: left;
+    border-collapse: collapse;
 }
 
 .stats-table th,
 .stats-table td {
-    padding: 1rem 1.25rem;
+    padding: 0.85rem 1rem;
     border-bottom: 1px solid var(--border-color-light);
+    white-space: nowrap; /* Forhindrer at tekst brytes på en dårlig måte */
 }
 
 .stats-table thead {
-    background-color: var(--background-offwhite);
+    background-color: #FAFBFC;
 }
 
 .stats-table th {
-    font-family: var(--font-display, sans-serif);
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: var(--text-on-light-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.stats-table th:nth-child(2) { /* Lag-kolonnen */
+    text-align: left;
 }
 
 .stats-table tbody tr:last-child td {
@@ -36,10 +91,41 @@
 }
 
 .stats-table tbody tr:hover {
-    background-color: var(--background-offwhite);
+    background-color: #f9f9fd;
 }
 
 .stats-table td {
     color: var(--text-on-light-primary);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    text-align: center;
 }
+
+.stats-table td:nth-child(2) { /* Lag-cellen */
+    text-align: left;
+    font-weight: 500;
+}
+
+.position-col {
+    width: 40px;
+    color: var(--neutral-medium);
+}
+
+.points-col {
+    width: 80px;
+    font-weight: 700;
+}
+
+
+
+/* Øker spesifisiteten ved å inkludere tabell-klassen */
+
+.stats-table .positive-value {
+    color: #27ae60; /* Grønn for positiv verdi */
+    font-weight: 500;
+}
+
+.stats-table .negative-value {
+    color: #c0392b; /* Rød for negativ verdi */
+    font-weight: 500;
+}
+

@@ -11,24 +11,19 @@
     margin: 0; 
 }
 
-/* Stil for den spesielle "Opprett Ny Bot"-knappen */
 .cta-button-outlined {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  
   padding: 0.7rem 1.5rem;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
-  
   background-color: #293846;
   color: #dfe4ed;
-  
   border: 2px solid var(--accent-color-highlight, #4DB6AC);
-  
   transition: all 0.2s ease-in-out;
 }
 
@@ -40,8 +35,6 @@
   transform: translateY(-2px); 
 }
 
-
-/* Stil for når listen er tom */
 .empty-state {
     text-align: center;
     padding: 4rem 2rem;
@@ -66,7 +59,30 @@
     margin-top: 1.5rem;
 }
 
-/* Rutenett for bot-kortene */
+
+
+.bots-page-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem; /* Større avstand mellom gruppene */
+}
+
+.bot-group-section {
+    /* Denne klassen holder en gruppe sammen */
+}
+
+.bot-group-title {
+    font-family: var(--font-display, sans-serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-on-light-primary);
+    margin: 0 0 1.25rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border-color-light);
+}
+
+
+
 .bots-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -192,8 +208,6 @@
     border-color: #a9d6f5;
 }
 
-
-/* Stil for laste-tilstand og fullside-feil */
 .loading-state, .full-page-error {
     display: flex;
     flex-direction: column;
@@ -225,7 +239,6 @@
     color: #c0392b;
 }
 
-/* Bruker den globale .cta-button.secondary-stilen for "Prøv igjen" */
 .full-page-error .cta-button.secondary {
     margin-top: 1rem;
     border-color: #c0392b;

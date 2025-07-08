@@ -1,39 +1,38 @@
+// src/components/CreateBotModal.tsx
+
 import React, { useState } from 'react';
 import { useAuth } from '@clerk/clerk-react';
-import './CreateBotModal.css'; // Dedikert CSS
+import './CreateBotModal.css';
 
-// Definerer hvilke props komponenten tar imot
 interface CreateBotModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onBotCreated: () => void; // Funksjon for å oppdatere bot-listen etterpå
+  onBotCreated: () => void;
 }
 
-// Definerer typen for dataen i skjemaet
+// Oppdater dette interfacet til å inkludere den nye bot-typen
 interface BotFormData {
   name: string;
-  sourceType: 'TWITTER' | 'SPORT_API' | 'STOCK_API' | 'CRYPTO_API';
+  sourceType: 'TWITTER' | 'SPORT_API' | 'LEAGUE_STATS' | 'STOCK_API' | 'CRYPTO_API';
   sourceIdentifier: string;
 }
 
 const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotCreated }) => {
   const [formData, setFormData] = useState<BotFormData>({
     name: '',
-    sourceType: 'TWITTER', // Standardverdi
+    sourceType: 'TWITTER',
     sourceIdentifier: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { getToken } = useAuth();
 
-  // Returner ingenting hvis modalen ikke skal vises
   if (!isOpen) {
     return null;
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    // For select, må vi kanskje "caste" typen for å tilfredsstille TypeScript
     setFormData(prev => ({ ...prev, [name]: value as BotFormData[keyof BotFormData] }));
   };
 
@@ -57,16 +56,28 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
         throw new Error('Kunne ikke opprette bot. Prøv igjen.');
       }
 
-      // Suksess!
-      onBotCreated(); // Oppdater bot-listen i parent-komponenten
-      onClose(); // Lukk modalen
-      // Nullstill skjemaet for neste gang
+      onBotCreated();
+      onClose();
       setFormData({ name: '', sourceType: 'TWITTER', sourceIdentifier: '' });
 
     } catch (err: any) {
       setError(err.message);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // Hjelpetekst som endrer seg basert på valgt kildetype
+  const getPlaceholderText = () => {
+    switch (formData.sourceType) {
+      case 'TWITTER':
+        return "F.eks. 'FabrizioRomano'";
+      case 'SPORT_API':
+        return "For enkelt-lag: 'ligaId:sesong:lagId'";
+      case 'LEAGUE_STATS':
+        return "For hel liga: 'ligaId:sesong'";
+      default:
+        return 'Kilde-identifikator';
     }
   };
 
@@ -86,7 +97,7 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="F.eks. 'Fotballnyheter fra Romano'"
+              placeholder="F.eks. 'Premier League 2023 Stats'"
               required
               disabled={isSubmitting}
             />
@@ -102,7 +113,9 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
               disabled={isSubmitting}
             >
               <option value="TWITTER">Twitter</option>
-              <option value="SPORT_API">Sport API</option>
+              <option value="SPORT_API">Sport API (Enkelt-lag)</option>
+              {/* ---- HER ER FIKSEN ---- */}
+              <option value="LEAGUE_STATS">Liga-statistikk (Hel liga)</option>
               <option value="STOCK_API">Aksje API</option>
               <option value="CRYPTO_API">Krypto API</option>
             </select>
@@ -115,7 +128,7 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
               name="sourceIdentifier"
               value={formData.sourceIdentifier}
               onChange={handleChange}
-              placeholder="F.eks. 'FabrizioRomano' eller '39:2020:33'"
+              placeholder={getPlaceholderText()}
               required
               disabled={isSubmitting}
             />
@@ -125,7 +138,6 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
             <button type="button" className="action-btn" onClick={onClose} disabled={isSubmitting}>
               Avbryt
             </button>
-            {/* ENDRING HER: Bruker .cta-button-outlined for konsistens */}
             <button type="submit" className="cta-button-outlined" disabled={isSubmitting}>
               {isSubmitting ? 'Lagrer...' : 'Lagre Bot'}
             </button>
