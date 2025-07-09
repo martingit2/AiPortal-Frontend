@@ -5,20 +5,30 @@ import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '@clerk/clerk-react';
 import { RefreshCw, AlertTriangle, Calendar, Users } from 'lucide-react';
 import MatchStatsModal from '../../components/MatchStatsModal';
-import './TeamDetailsPage.css'; // Dedikert CSS-fil
+import './TeamDetailsPage.css';
 
-// Interface for en kamp, hentet fra backend
+// ---- Interfacer for datastrukturer ----
+
+// Dette matcher Fixture-entiteten i backend
 interface Fixture {
   id: number;
   date: string;
+  homeTeamId: number;
+  awayTeamId: number;
   homeTeamName: string;
   awayTeamName: string;
-  // Du kan legge til mål hvis/når du lagrer dem i Fixture-entiteten
-  // goalsHome?: number;
-  // goalsAway?: number;
+  goalsHome: number | null;
+  goalsAway: number | null;
 }
 
-// Interface for dataen som sendes til modalen
+// Dette matcher den nye TeamDetailsDto fra backend
+interface TeamDetails {
+  teamName: string;
+  season: number;
+  fixtures: Fixture[];
+}
+
+// Data for modalen (fra MatchStatsModal.tsx)
 interface MatchStat {
   teamName: string;
   shotsOnGoal: number;
@@ -45,39 +55,36 @@ interface ModalData {
 }
 
 const TeamDetailsPage: React.FC = () => {
-    // Hent teamId og season fra URL-en
-    const { teamId, season } = useParams();
+    const { teamId, season } = useParams<{ teamId: string; season: string }>();
     const { getToken } = useAuth();
     
-    const [fixtures, setFixtures] = useState<Fixture[]>([]);
-    const [teamName, setTeamName] = useState<string>(''); // For å vise lagnavn i tittelen
+    // Forenklet state: én for all data, én for lasting, én for feil
+    const [teamDetails, setTeamDetails] = useState<TeamDetails | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     // States for modalen
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalData, setModalData] = useState<ModalData | null>(null);
-    const [isLoadingModal, setIsLoadingModal] = useState(false);
 
-    const fetchFixtures = useCallback(async () => {
+    const fetchData = useCallback(async () => {
         if (!teamId || !season) return;
         setIsLoading(true);
         setError(null);
         try {
             const token = await getToken();
-            const response = await fetch(`http://localhost:8080/api/v1/fixtures/team/${teamId}/season/${season}`, {
+            // Ett enkelt, rent API-kall
+            const response = await fetch(`http://localhost:8080/api/v1/fixtures/team-details/team/${teamId}/season/${season}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (!response.ok) throw new Error("Kunne ikke hente kampliste for laget.");
-            
-            const data: Fixture[] = await response.json();
-            setFixtures(data);
-            
-            // Hent lagnavn fra den første kampen for å vise i tittelen
-            if (data.length > 0) {
-                setTeamName(data[0].homeTeamName === 'Your Team Name' ? data[0].awayTeamName : data[0].homeTeamName);
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error("Fant ingen kamper for dette laget i den valgte sesongen. Har den historiske datainnsamleren kjørt?");
+                }
+                throw new Error("En ukjent feil oppstod ved henting av kampdata.");
             }
-
+            const data: TeamDetails = await response.json();
+            setTeamDetails(data);
         } catch (e: any) {
             setError(e.message);
         } finally {
@@ -86,11 +93,10 @@ const TeamDetailsPage: React.FC = () => {
     }, [teamId, season, getToken]);
 
     useEffect(() => {
-        fetchFixtures();
-    }, [fetchFixtures]);
+        fetchData();
+    }, [fetchData]);
     
     const handleRowClick = async (fixture: Fixture) => {
-        setIsLoadingModal(true);
         setIsModalOpen(true);
         setModalData(null);
         try {
@@ -98,21 +104,21 @@ const TeamDetailsPage: React.FC = () => {
             const response = await fetch(`http://localhost:8080/api/v1/statistics/fixture/${fixture.id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (!response.ok) throw new Error("Kunne ikke hente kampstatistikk. Sørg for at den historiske datainnsamleren har kjørt for denne sesongen.");
+            if (!response.ok) {
+                throw new Error("Statistikk for denne kampen er ikke tilgjengelig.");
+            }
             const stats = await response.json();
             setModalData({ stats, fixtureInfo: { homeTeamName: fixture.homeTeamName, awayTeamName: fixture.awayTeamName } });
         } catch (err: any) {
             console.error(err);
             setModalData({ stats: [], fixtureInfo: { homeTeamName: 'Feil', awayTeamName: err.message } });
-        } finally {
-            setIsLoadingModal(false);
         }
     };
 
-    const renderFixtureList = () => {
+    const renderContent = () => {
         if (isLoading) return <div className="loading-state"><RefreshCw className="loading-spinner" /> Laster kamper...</div>;
         if (error) return <div className="error-box full-page-error"><AlertTriangle /> {error}</div>;
-        if (fixtures.length === 0) return <div className="empty-state">Ingen kamper funnet for dette laget i denne sesongen.</div>;
+        if (!teamDetails || teamDetails.fixtures.length === 0) return <div className="empty-state">Ingen kamper funnet for dette laget i denne sesongen.</div>;
 
         return (
             <div className="stats-table-container">
@@ -120,12 +126,13 @@ const TeamDetailsPage: React.FC = () => {
                     <thead>
                         <tr>
                             <th>Dato</th>
-                            <th>Hjemmelag</th>
-                            <th>Bortelag</th>
+                            <th className="team-cell-home">Hjemmelag</th>
+                            <th className="result-cell">Resultat</th>
+                            <th className="team-cell-away">Bortelag</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {fixtures.map(fixture => (
+                        {teamDetails.fixtures.map(fixture => (
                             <tr 
                                 key={fixture.id} 
                                 className="clickable-row" 
@@ -133,8 +140,13 @@ const TeamDetailsPage: React.FC = () => {
                                 title="Klikk for å se kampstatistikk"
                             >
                                 <td>{new Date(fixture.date).toLocaleDateString('no-NO')}</td>
-                                <td className={fixture.homeTeamName === teamName ? 'highlight-team' : ''}>{fixture.homeTeamName}</td>
-                                <td className={fixture.awayTeamName === teamName ? 'highlight-team' : ''}>{fixture.awayTeamName}</td>
+                                <td className={`team-cell-home ${teamId && parseInt(teamId) === fixture.homeTeamId ? 'highlight-team' : ''}`}>{fixture.homeTeamName}</td>
+                                <td className="result-cell">
+                                    {(fixture.goalsHome !== null && fixture.goalsAway !== null)
+                                        ? `${fixture.goalsHome} - ${fixture.goalsAway}`
+                                        : ' - '}
+                                </td>
+                                <td className={`team-cell-away ${teamId && parseInt(teamId) === fixture.awayTeamId ? 'highlight-team' : ''}`}>{fixture.awayTeamName}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -147,22 +159,20 @@ const TeamDetailsPage: React.FC = () => {
         <div className="dashboard-page">
             <div className="page-header">
                 <h1 className="dashboard-page-title">
-                    Kamper for {teamName || 'Lag'}
+                    Kamper for {teamDetails?.teamName || `Lag ID: ${teamId}`}
                 </h1>
                 <div className="page-header-info">
                     <span><Calendar size={16} /> Sesong: {season}</span>
-                    <span><Users size={16} /> Lag ID: {teamId}</span>
                 </div>
             </div>
 
-            {renderFixtureList()}
+            {renderContent()}
 
             <MatchStatsModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 stats={modalData?.stats || []}
                 fixtureInfo={modalData?.fixtureInfo || { homeTeamName: '', awayTeamName: '' }}
-                // isLoading={isLoadingModal} // Kan implementeres for en spinner i modalen
             />
             
             <Link to="/dashboard/fotball-stats" className="back-link">
