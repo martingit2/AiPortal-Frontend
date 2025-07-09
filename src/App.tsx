@@ -7,18 +7,20 @@ import LandingPage from './pages/LandingPage';
 import DashboardLayout from './layouts/DashboardLayout';
 
 // Importer alle sidene som skal vises inne i dashboardet
-;
+import DashboardPage from './pages/dashboard/DashboardPage';
 import BotsPage from './pages/dashboard/BotsPage';
 import DataFeedPage from './pages/dashboard/DataFeedPage';
-import AnalysesPage from './pages/dashboard/AnalysesPage'; // Importerer den nye siden
+import AnalysesPage from './pages/dashboard/AnalysesPage';
+import FootballStatsPage from './pages/dashboard/FootballStatsPage';
+import OddsAnalysisPage from './pages/dashboard/OddsAnalysisPage';
+
 
 // Importer Clerk-komponenter for autentiseringssjekk
 import { SignedIn, SignedOut } from '@clerk/clerk-react';
 
 import './App.css';
-import DashboardPage from './pages/dashboard/DashboardPage';
-import FootballStatsPage from './pages/dashboard/FootballStatsPage';
-import OddsAnalysisPage from './pages/dashboard/OddsAnalysisPage';
+import TeamDetailsPage from './pages/dashboard/TeamDetailsPage';
+
 
 // Placeholder for sider som ikke er fullt implementert ennå
 const ModelsPage: React.FC = () => <h1 className="dashboard-page-title">Mine Modeller (kommer snart)</h1>;
@@ -45,12 +47,16 @@ function App() {
             </>
           }
         >
-          {/* "Nested" ruter */}
+          {/* "Nested" ruter som rendres inne i DashboardLayout */}
           <Route index element={<DashboardPage />} />
           <Route path="analyser" element={<AnalysesPage />} />
           <Route path="boter" element={<BotsPage />} />
           <Route path="data-feed" element={<DataFeedPage />} />
           <Route path="fotball-stats" element={<FootballStatsPage />} />
+          
+
+          <Route path="team-details/:teamId/season/:season" element={<TeamDetailsPage />} />
+          
           <Route path="modeller" element={<ModelsPage />} />
           <Route path="odds-analyse" element={<OddsAnalysisPage />} />
           <Route path="innstillinger" element={<SettingsPage />} />

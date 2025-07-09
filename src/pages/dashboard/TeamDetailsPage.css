@@ -1,0 +1,78 @@
+/* src/pages/dashboard/TeamDetailsPage.css */
+
+
+
+.page-header-info {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-on-light-secondary);
+    align-items: center;
+}
+.page-header-info span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 2rem;
+    color: var(--primary-purple);
+    text-decoration: none;
+    font-weight: 500;
+}
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.stats-table-container {
+    background-color: var(--background-light);
+    border: 1px solid var(--border-color-light);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.stats-table th,
+.stats-table td {
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid var(--border-color-light);
+    white-space: nowrap;
+}
+
+.stats-table thead {
+    background-color: #FAFBFC;
+}
+
+.stats-table th {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-on-light-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
+}
+
+.stats-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.stats-table tbody tr.clickable-row:hover {
+    background-color: #e8f4fd;
+    cursor: pointer;
+}
+
+.stats-table td {
+    color: var(--text-on-light-primary);
+    font-size: 0.9rem;
+}
+
+.highlight-team {
+    font-weight: 600;
+}

@@ -1,0 +1,73 @@
+/* src/components/MatchStatsModal.css */
+.stats-modal-content {
+  background-color: #1a222e;
+  color: #dfe4ed;
+  padding: 1.5rem 2rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  width: 100%;
+  max-width: 600px;
+  animation: fadeIn 0.3s ease-out;
+  border: 1px solid #2f4050; 
+}
+
+.stats-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #2f4050; 
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.stats-modal-header h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  color: #ffffff;
+  font-size: 1.5rem;
+}
+
+.teams-header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+.teams-header h3 {
+    margin: 0;
+    flex: 1;
+}
+.teams-header span {
+    color: var(--neutral-medium);
+}
+
+.stats-comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.stats-comparison-table th, .stats-comparison-table td {
+    padding: 0.75rem 0;
+    text-align: center;
+}
+
+.stats-comparison-table th {
+    font-weight: 500;
+    color: var(--neutral-light);
+    font-size: 0.9rem;
+}
+.stats-comparison-table td {
+    font-size: 1.1rem;
+    font-weight: 600;
+    width: 35%;
+}
+
+.stats-comparison-table tr:not(:last-child) {
+    border-bottom: 1px solid #2f4050;
+}
+
+.stats-comparison-table .winner {
+    color: var(--accent-color-highlight);
+}

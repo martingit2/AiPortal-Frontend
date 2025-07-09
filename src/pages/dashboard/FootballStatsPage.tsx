@@ -3,12 +3,17 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import { RefreshCw, AlertTriangle, ShieldCheck, ChevronDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import './FootballStatsPage.css';
 
-// Interface for data fra backend
+// ---- Interfacer for datastrukturer ----
+
+// Data som kommer fra backend
 interface TeamStatsDtoFromApi {
   id: number;
+  teamId: number; // <-- VIKTIG: Lagets faktiske ID
   teamName: string;
+  season: number;
   playedTotal: number;
   winsTotal: number;
   drawsTotal: number;
@@ -17,13 +22,13 @@ interface TeamStatsDtoFromApi {
   goalsAgainstTotal: number;
 }
 
-// Interface for gruppert data etter at vi har mottatt den
+// Gruppert data fra backend
 interface LeagueStatsGroupFromApi {
   groupTitle: string;
   statistics: TeamStatsDtoFromApi[];
 }
 
-// Interface for dataen etter at VI har behandlet den i frontend
+// Data etter at vi har behandlet den i frontend
 interface ProcessedTeamStats extends TeamStatsDtoFromApi {
   points: number;
   goalDifference: number;
@@ -34,7 +39,7 @@ interface ProcessedLeagueGroup {
   statistics: ProcessedTeamStats[];
 }
 
-// Hjelpefunksjon for å fargelegge tall basert på verdi
+// Hjelpefunksjon for fargelegging
 const getColorClassForValue = (value: number): string => {
   if (value > 0) return 'positive-value';
   if (value < 0) return 'negative-value';
@@ -48,6 +53,7 @@ const FootballStatsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [openGroups, setOpenGroups] = useState<Set<string>>(new Set());
   const { getToken } = useAuth();
+  const navigate = useNavigate();
 
   const fetchStats = useCallback(async () => {
     setIsLoading(true);
@@ -62,7 +68,6 @@ const FootballStatsPage: React.FC = () => {
       const data: LeagueStatsGroupFromApi[] = await response.json();
       setGroupedStats(data);
 
-      // Åpne den første gruppen som standard ved første lasting
       if (data.length > 0 && openGroups.size === 0) {
         setOpenGroups(new Set([data[0].groupTitle]));
       }
@@ -90,8 +95,6 @@ const FootballStatsPage: React.FC = () => {
     });
   };
 
-  // Bruk useMemo for å beregne poeng/målforskjell og sortere dataen.
-  // Dette kjører kun når 'groupedStats' endrer seg, noe som er veldig effektivt.
   const processedData: ProcessedLeagueGroup[] = useMemo(() => {
     return groupedStats.map(group => {
       const calculatedStats = group.statistics.map(team => {
@@ -100,32 +103,30 @@ const FootballStatsPage: React.FC = () => {
         return { ...team, points, goalDifference };
       });
 
-      // Sorter tabellen: 1. Etter poeng (høyest først), 2. Etter målforskjell (høyest først)
       const sortedStats = calculatedStats.sort((a, b) => {
-        if (b.points !== a.points) {
-          return b.points - a.points;
-        }
-        return b.goalDifference - a.goalDifference;
+        if (b.points !== a.points) return b.points - a.points;
+        if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
+        return b.goalsForTotal - a.goalsForTotal;
       });
 
       return { ...group, statistics: sortedStats };
     });
   }, [groupedStats]);
 
+  const handleTeamRowClick = (teamId: number, season: number) => {
+    navigate(`/dashboard/team-details/${teamId}/season/${season}`);
+  };
+
 
   const renderContent = () => {
-    if (isLoading) {
-        return <div className="loading-state"><RefreshCw className="loading-spinner" size={48} /><p>Laster statistikk...</p></div>;
-    }
-    if (error) {
-        return <div className="error-box full-page-error"><AlertTriangle size={32} /><p>{error}</p></div>;
-    }
+    if (isLoading) return <div className="loading-state"><RefreshCw className="loading-spinner" size={48} /><p>Laster statistikk...</p></div>;
+    if (error) return <div className="error-box full-page-error"><AlertTriangle size={32} /><p>{error}</p></div>;
     if (processedData.length === 0) {
       return (
         <div className="empty-state">
           <ShieldCheck size={48} />
           <h3>Ingen statistikk funnet</h3>
-          <p>Dine aktive sports-boter har ikke hentet inn noen data ennå.</p>
+          <p>Dine aktive datainnsamlere har ikke hentet inn noen data ennå.</p>
         </div>
       );
     }
@@ -159,7 +160,12 @@ const FootballStatsPage: React.FC = () => {
                     </thead>
                     <tbody>
                       {group.statistics.map((team, index) => (
-                        <tr key={team.id}>
+                        <tr 
+                          key={team.id} 
+                          className="clickable-row"
+                          onClick={() => handleTeamRowClick(team.teamId, team.season)} // <-- FIKS: Bruker team.teamId
+                          title={`Klikk for å se detaljer for ${team.teamName}`}
+                        >
                           <td className="position-col">{index + 1}</td>
                           <td>{team.teamName}</td>
                           <td>{team.playedTotal}</td>

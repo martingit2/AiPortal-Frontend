@@ -129,3 +129,11 @@
     font-weight: 500;
 }
 
+
+.clickable-row {
+    cursor: pointer;
+}
+
+.clickable-row:hover {
+    background-color: #e8f4fd !important; /* Overstyrer annen hover-effekt */
+}

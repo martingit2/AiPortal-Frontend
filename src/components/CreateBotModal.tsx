@@ -10,10 +10,10 @@ interface CreateBotModalProps {
   onBotCreated: () => void;
 }
 
-// Oppdater dette interfacet til å inkludere den nye bot-typen
+// Oppdater dette interfacet til å inkludere ALLE nye bot-typer
 interface BotFormData {
   name: string;
-  sourceType: 'TWITTER' | 'SPORT_API' | 'LEAGUE_STATS' | 'STOCK_API' | 'CRYPTO_API';
+  sourceType: 'TWITTER' | 'SPORT_API' | 'LEAGUE_STATS' | 'HISTORICAL_FIXTURE_DATA' | 'STOCK_API' | 'CRYPTO_API';
   sourceIdentifier: string;
 }
 
@@ -53,7 +53,8 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
       });
 
       if (!response.ok) {
-        throw new Error('Kunne ikke opprette bot. Prøv igjen.');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Kunne ikke opprette bot. Prøv igjen.');
       }
 
       onBotCreated();
@@ -75,7 +76,9 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
       case 'SPORT_API':
         return "For enkelt-lag: 'ligaId:sesong:lagId'";
       case 'LEAGUE_STATS':
-        return "For hel liga: 'ligaId:sesong'";
+        return "For hel liga (kun lag-stats): 'ligaId:sesong'";
+      case 'HISTORICAL_FIXTURE_DATA':
+        return "For hel sesong (kamp-stats): 'ligaId:sesong'";
       default:
         return 'Kilde-identifikator';
     }
@@ -97,7 +100,7 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="F.eks. 'Premier League 2023 Stats'"
+              placeholder="F.eks. 'Premier League 2023 Historikk'"
               required
               disabled={isSubmitting}
             />
@@ -114,8 +117,8 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
             >
               <option value="TWITTER">Twitter</option>
               <option value="SPORT_API">Sport API (Enkelt-lag)</option>
-              {/* ---- HER ER FIKSEN ---- */}
-              <option value="LEAGUE_STATS">Liga-statistikk (Hel liga)</option>
+              <option value="LEAGUE_STATS">Liga-statistikk (Oversikt)</option>
+              <option value="HISTORICAL_FIXTURE_DATA">Historisk Kampdata (Detaljert)</option>
               <option value="STOCK_API">Aksje API</option>
               <option value="CRYPTO_API">Krypto API</option>
             </select>
