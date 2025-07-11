@@ -3,27 +3,10 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import './MatchStatsModal.css';
+import type { MatchStat } from '../types';
 
-// Interface for å matche den komplette DTO-en fra backend
-interface MatchStat {
-  teamName: string;
-  shotsOnGoal: number;
-  shotsOffGoal: number;
-  totalShots: number;
-  blockedShots: number;
-  shotsInsideBox: number;
-  shotsOutsideBox: number;
-  fouls: number;
-  cornerKicks: number;
-  offsides: number;
-  ballPossession: string;
-  yellowCards: number;
-  redCards: number;
-  goalkeeperSaves: number;
-  totalPasses: number;
-  passesAccurate: number;
-  passesPercentage: string;
-}
+
+// FJERN DEN LOKALE MatchStat-DEFINISJONEN HERFRA
 
 interface MatchStatsModalProps {
   isOpen: boolean;

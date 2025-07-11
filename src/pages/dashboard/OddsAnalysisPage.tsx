@@ -3,40 +3,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import { RefreshCw, AlertTriangle, HelpCircle } from 'lucide-react';
-import MatchStatsModal from '../../components/MatchStatsModal'; // Importer modalen
-import './OddsAnalysisPage.css'; 
+import MatchStatsModal from '../../components/MatchStatsModal';
+import './OddsAnalysisPage.css';
+import type { MatchStat, ValueBet } from '../../types';
 
-// --- Interfacer for datastrukturer ---
 
-// Data for hovedtabellen
-interface ValueBet {
-  fixtureId: number;
-  homeTeamName: string;
-  awayTeamName: string;
-  fixtureDate: string;
-  marketHomeOdds: number;
-  marketDrawOdds: number;
-  marketAwayOdds: number;
-  bookmakerName: string;
-  aracanixHomeOdds: number;
-  aracanixDrawOdds: number;
-  aracanixAwayOdds: number;
-  valueHome: number;
-  valueDraw: number;
-  valueAway: number;
-}
-
-// Data for modalen
-interface MatchStat {
-  teamName: string;
-  shotsOnGoal: number;
-  totalShots: number;
-  cornerKicks: number;
-  ballPossession: string;
-  yellowCards: number;
-  redCards: number;
-  // Legg til resten av feltene her hvis du utvider DTO-en
-}
+// FJERN DE LOKALE DEFINISJONENE FOR ValueBet OG MatchStat
 
 interface ModalData {
   stats: MatchStat[];
@@ -79,7 +51,6 @@ const OddsAnalysisPage: React.FC = () => {
     fetchValueBets();
   }, [fetchValueBets]);
   
-  // --- NY FUNKSJON FOR Å ÅPNE MODAL OG HENTE DATA ---
   const handleRowClick = async (fixtureId: number, homeTeamName: string, awayTeamName: string) => {
     setIsLoadingModal(true);
     setIsModalOpen(true);
@@ -94,11 +65,10 @@ const OddsAnalysisPage: React.FC = () => {
           const errorText = await response.text();
           throw new Error(`Kunne ikke hente kampstatistikk: ${errorText}`);
       }
-      const stats = await response.json();
+      const stats: MatchStat[] = await response.json(); // TypeScript vet nå at dette er den komplette typen
       setModalData({ stats, fixtureInfo: { homeTeamName, awayTeamName } });
     } catch (err: any) {
       console.error(err);
-      // Gi brukeren en feilmelding i modalen
       setModalData({ stats: [], fixtureInfo: { homeTeamName: 'Feil', awayTeamName: 'Data ikke funnet' } });
     } finally {
       setIsLoadingModal(false);
@@ -174,13 +144,11 @@ const OddsAnalysisPage: React.FC = () => {
       </div>
       {renderContent()}
 
-      {/* Render modalen basert på state */}
       <MatchStatsModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         stats={modalData?.stats || []}
         fixtureInfo={modalData?.fixtureInfo || { homeTeamName: '', awayTeamName: '' }}
-        // isLoading={isLoadingModal} // Kan legges til for en spinner i modalen
       />
     </div>
   );

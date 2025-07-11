@@ -20,6 +20,7 @@ import { SignedIn, SignedOut } from '@clerk/clerk-react';
 
 import './App.css';
 import TeamDetailsPage from './pages/dashboard/TeamDetailsPage';
+import FixturesPage from './pages/dashboard/FixturesPage';
 
 
 // Placeholder for sider som ikke er fullt implementert ennå
@@ -59,6 +60,7 @@ function App() {
           
           <Route path="modeller" element={<ModelsPage />} />
           <Route path="odds-analyse" element={<OddsAnalysisPage />} />
+          <Route path="fixtures" element={<FixturesPage />} />
           <Route path="innstillinger" element={<SettingsPage />} />
         </Route>
 
