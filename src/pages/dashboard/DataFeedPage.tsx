@@ -1,9 +1,13 @@
+// src/pages/dashboard/DataFeedPage.tsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import { MessageSquare, RefreshCw, AlertTriangle, Bot, PlayCircle } from 'lucide-react';
 import './DataFeedPage.css';
+import type { PaginatedResponse } from '../../types';
+
 
 // Definerer typen for en enkelt tweet slik den kommer fra backenden (TweetDto)
+// Denne kan også flyttes til `src/types/index.ts` hvis den brukes andre steder
 interface TweetDto {
   id: number;
   tweetId: string;
@@ -11,14 +15,6 @@ interface TweetDto {
   content: string;
   tweetedAt: string;
   sourceBotName: string;
-}
-
-// Definerer typen for den paginerte responsen fra Spring Boot
-interface PaginatedResponse {
-  content: TweetDto[];
-  totalPages: number;
-  totalElements: number;
-  number: number;
 }
 
 const DataFeedPage: React.FC = () => {
@@ -39,8 +35,13 @@ const DataFeedPage: React.FC = () => {
       });
       if (!response.ok) throw new Error('Kunne ikke hente tweet-feed.');
       
-      const data: PaginatedResponse = await response.json();
-      setTweets(data.content);
+      const data: PaginatedResponse<TweetDto> = await response.json();
+
+      // Sorterer innholdet etter 'tweetedAt' i synkende rekkefølge før vi setter state.
+      const sortedTweets = data.content.sort((a, b) => new Date(b.tweetedAt).getTime() - new Date(a.tweetedAt).getTime());
+      
+      setTweets(sortedTweets);
+
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -59,7 +60,6 @@ const DataFeedPage: React.FC = () => {
       const token = await getToken();
       if (!token) throw new Error("Token mangler.");
 
-      // ENDRING HER: URL-en peker nå til det nye sentiment-endepunktet
       const response = await fetch('http://localhost:8080/api/v1/analyses/sentiment', {
         method: 'POST',
         headers: {
