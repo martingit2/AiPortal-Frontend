@@ -1,7 +1,5 @@
 /* src/pages/dashboard/TeamDetailsPage.css */
 
-
-
 .page-header-info {
     display: flex;
     gap: 1rem;
@@ -75,4 +73,58 @@
 
 .highlight-team {
     font-weight: 600;
+}
+
+/* NYTT: Styling for seksjonsoverskriften over tabellen */
+.section-header {
+    font-family: var(--font-display, sans-serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-on-light-primary);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color-light);
+}
+
+.chart-wrapper {
+    background-color: var(--background-light);
+    border: 1px solid var(--border-color-light);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.chart-controls {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.stat-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color-light);
+    background-color: transparent;
+    color: var(--text-on-light-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.stat-button:hover {
+    background-color: var(--background-offwhite);
+    border-color: #ccc;
+}
+
+.stat-button.active {
+    background-color: var(--primary-purple);
+    color: white;
+    border-color: var(--primary-purple);
 }

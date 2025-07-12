@@ -8,13 +8,10 @@ import './FixturesPage.css';
 import type { Fixture, MatchStat, PaginatedResponse } from '../../types';
 
 
-// FJERN ALLE LOKALE DEFINISJONER
-
 interface ModalData {
   stats: MatchStat[];
   fixtureInfo: { homeTeamName: string; awayTeamName: string };
 }
-
 
 const FixturesPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'upcoming' | 'results'>('upcoming');
@@ -28,11 +25,12 @@ const FixturesPage: React.FC = () => {
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState<ModalData | null>(null);
+  const [isLoadingModal, setIsLoadingModal] = useState(false); // <--- VI BRUKER DENNE
 
   const fetchFixtures = useCallback(async (fetchPage: number, append = false) => {
     if (!append) {
       setIsLoading(true);
-      setFixtures([]); 
+      setFixtures([]);
     } else {
       setIsAppending(true);
     }
@@ -68,11 +66,10 @@ const FixturesPage: React.FC = () => {
     fetchFixtures(0);
   }, [fetchFixtures]); 
 
-
   const handleTabClick = (tab: 'upcoming' | 'results') => {
-    if (tab === activeTab) return; 
+    if (tab === activeTab) return;
     setActiveTab(tab);
-    setPage(0); 
+    setPage(0);
   };
 
   const handleLoadMore = () => {
@@ -82,8 +79,9 @@ const FixturesPage: React.FC = () => {
   };
 
   const handleRowClick = async (fixture: Fixture) => {
-    if (activeTab !== 'results') return; 
-
+    if (activeTab !== 'results') return;
+    
+    setIsLoadingModal(true); // <-- Setter lasting til true
     setIsModalOpen(true);
     setModalData(null);
     try {
@@ -94,11 +92,13 @@ const FixturesPage: React.FC = () => {
         if (!response.ok) {
             throw new Error("Statistikk for denne kampen er ikke tilgjengelig.");
         }
-        const stats: MatchStat[] = await response.json(); // Nå er dette den korrekte, delte typen
+        const stats: MatchStat[] = await response.json();
         setModalData({ stats, fixtureInfo: { homeTeamName: fixture.homeTeamName, awayTeamName: fixture.awayTeamName } });
     } catch (err: any) {
         console.error(err);
         setModalData({ stats: [], fixtureInfo: { homeTeamName: 'Feil', awayTeamName: err.message } });
+    } finally {
+        setIsLoadingModal(false); // <-- Setter lasting til false
     }
   };
 
@@ -195,6 +195,7 @@ const FixturesPage: React.FC = () => {
             onClose={() => setIsModalOpen(false)}
             stats={modalData?.stats || []}
             fixtureInfo={modalData?.fixtureInfo || { homeTeamName: '', awayTeamName: '' }}
+            isLoading={isLoadingModal} // <-- DEN MANGLENDE LINJEN ER NÅ LAGT TIL
         />
     </div>
   );

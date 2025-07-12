@@ -61,6 +61,7 @@ export interface ValueBet {
   valueHome: number;
   valueDraw: number;
   valueAway: number;
+  marketDescription: string | null;
 }
 
 /**

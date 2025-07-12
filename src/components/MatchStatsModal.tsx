@@ -1,27 +1,23 @@
 // src/components/MatchStatsModal.tsx
 
 import React from 'react';
-import { X } from 'lucide-react';
+import { RefreshCw, X } from 'lucide-react'; // Importer RefreshCw
 import './MatchStatsModal.css';
 import type { MatchStat } from '../types';
 
-
-// FJERN DEN LOKALE MatchStat-DEFINISJONEN HERFRA
 
 interface MatchStatsModalProps {
   isOpen: boolean;
   onClose: () => void;
   stats: MatchStat[];
   fixtureInfo: { homeTeamName: string; awayTeamName: string };
+  isLoading: boolean; // <-- LEGG TIL DENNE PROPEN
 }
 
-// Hjelpekomponent for å lage en rad i tabellen
 const StatRow: React.FC<{ label: string; home: any; away: any }> = ({ label, home, away }) => {
-  // Trygt håndtere null/undefined-verdier
   const homeValue = home ?? 'N/A';
   const awayValue = away ?? 'N/A';
   
-  // Prøv å konvertere til tall for sammenligning, men håndter strenger som "55%"
   const homeNum = parseInt(homeValue, 10);
   const awayNum = parseInt(awayValue, 10);
   
@@ -37,36 +33,32 @@ const StatRow: React.FC<{ label: string; home: any; away: any }> = ({ label, hom
   );
 };
 
-
-const MatchStatsModal: React.FC<MatchStatsModalProps> = ({ isOpen, onClose, stats, fixtureInfo }) => {
+const MatchStatsModal: React.FC<MatchStatsModalProps> = ({ isOpen, onClose, stats, fixtureInfo, isLoading }) => {
   if (!isOpen) return null;
 
-  // Sorterer for å sikre at vi alltid har hjemme- og bortelag riktig
-  const homeStats = stats.find(s => s.teamName === fixtureInfo.homeTeamName);
-  const awayStats = stats.find(s => s.teamName === fixtureInfo.awayTeamName);
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <div className="modal-loading-state">
+          <RefreshCw className="loading-spinner" size={32} />
+          <p>Laster kampstatistikk...</p>
+        </div>
+      );
+    }
 
-  // Hvis en av statistikkene mangler, vis en ladetilstand eller feilmelding
-  if (!homeStats || !awayStats) {
+    const homeStats = stats.find(s => s.teamName === fixtureInfo.homeTeamName);
+    const awayStats = stats.find(s => s.teamName === fixtureInfo.awayTeamName);
+
+    if (!homeStats || !awayStats) {
+      return (
+        <div className="modal-loading-state">
+          <p>Data er ikke tilgjengelig for denne kampen.</p>
+        </div>
+      );
+    }
+    
     return (
-      <div className="modal-overlay" onClick={onClose}>
-        <div className="stats-modal-content" onClick={(e) => e.stopPropagation()}>
-          <div className="stats-modal-header">
-            <h2>Kampdetaljer</h2>
-            <button className="close-button" onClick={onClose}><X size={24} /></button>
-          </div>
-          <p>Laster statistikk eller data er ikke tilgjengelig...</p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="stats-modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="stats-modal-header">
-          <h2>Kampdetaljer</h2>
-          <button className="close-button" onClick={onClose}><X size={24} /></button>
-        </div>
+      <>
         <div className="teams-header">
           <h3>{homeStats.teamName}</h3>
           <span>vs</span>
@@ -88,6 +80,18 @@ const MatchStatsModal: React.FC<MatchStatsModalProps> = ({ isOpen, onClose, stat
             <StatRow label="Vellykkede pasninger" home={`${homeStats.passesAccurate} (${homeStats.passesPercentage})`} away={`${awayStats.passesAccurate} (${awayStats.passesPercentage})`} />
           </tbody>
         </table>
+      </>
+    );
+  };
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="stats-modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="stats-modal-header">
+          <h2>Kampdetaljer</h2>
+          <button className="close-button" onClick={onClose}><X size={24} /></button>
+        </div>
+        {renderContent()}
       </div>
     </div>
   );
