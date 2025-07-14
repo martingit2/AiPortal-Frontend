@@ -5,14 +5,10 @@ import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '@clerk/clerk-react';
 import { RefreshCw, AlertTriangle, Calendar, Shield, BarChartHorizontal, CornerUpRight, Angry } from 'lucide-react';
 import MatchStatsModal from '../../components/MatchStatsModal';
-
-import './TeamDetailsPage.css';
-import type { Fixture, MatchStat } from '../../types';
-import type { ChartDataPoint } from '../../components/TeamFormChart';
 import TeamFormChart from '../../components/TeamFormChart';
-
-
-// --- TYPER OG KONSTANTER ---
+import type { Fixture, MatchStat, PlayerMatchStat } from '../../types';
+import type { ChartDataPoint } from '../../components/TeamFormChart';
+import './TeamDetailsPage.css';
 
 interface TeamDetails {
   teamName: string;
@@ -20,8 +16,10 @@ interface TeamDetails {
   fixtures: Fixture[];
 }
 
+// Utvidet ModalData til å inkludere spillerstatistikk
 interface ModalData {
-  stats: MatchStat[];
+  teamStats: MatchStat[];
+  playerStats: PlayerMatchStat[];
   fixtureInfo: { homeTeamName: string; awayTeamName: string };
 }
 
@@ -50,8 +48,6 @@ const TeamDetailsPage: React.FC = () => {
 
     const [formChartData, setFormChartData] = useState<ChartDataPoint[]>([]);
     const [isLoadingChart, setIsLoadingChart] = useState(true);
-    
-    // NY STATE for å holde styr på valgt statistikk
     const [selectedStat, setSelectedStat] = useState<StatKey>('shotsOnGoal');
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -68,16 +64,20 @@ const TeamDetailsPage: React.FC = () => {
             const token = await getToken();
             if (!token) throw new Error("Token mangler.");
 
-            const detailsResponse = await fetch(`http://localhost:8080/api/v1/fixtures/team-details/team/${teamId}/season/${season}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
+            // Hent begge datakildene parallelt
+            const [detailsResponse, formResponse] = await Promise.all([
+                fetch(`http://localhost:8080/api/v1/fixtures/team-details/team/${teamId}/season/${season}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }),
+                fetch(`http://localhost:8080/api/v1/statistics/form/team/${teamId}/season/${season}?limit=10`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                })
+            ]);
+
             if (!detailsResponse.ok) throw new Error("Kunne ikke hente kampdetaljer.");
             const detailsData: TeamDetails = await detailsResponse.json();
             setTeamDetails(detailsData);
             
-            const formResponse = await fetch(`http://localhost:8080/api/v1/statistics/form/team/${teamId}/season/${season}?limit=10`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
             if (!formResponse.ok) throw new Error("Kunne ikke hente form-statistikk.");
             const formStatsRaw: FormStatRaw[] = await formResponse.json();
             
@@ -89,7 +89,6 @@ const TeamDetailsPage: React.FC = () => {
                 
                 combinedStats.sort((a, b) => new Date(a.fixture!.date).getTime() - new Date(b.fixture!.date).getTime());
 
-                // Mapper til et mer komplett dataobjekt
                 const chartData = combinedStats.map(stat => {
                     const opponent = stat.fixture!.homeTeamId.toString() === teamId ? stat.fixture!.awayTeamName : stat.fixture!.homeTeamName;
                     return {
@@ -103,7 +102,7 @@ const TeamDetailsPage: React.FC = () => {
                 setFormChartData(chartData);
             }
         } catch (e: any) {
-            console.error("En feil oppstod under datahenting for detaljsiden:", e);
+            console.error("Feil ved datahenting for detaljsiden:", e);
             setError(e.message);
         } finally {
             setIsLoading(false);
@@ -121,15 +120,35 @@ const TeamDetailsPage: React.FC = () => {
         setModalData(null);
         try {
             const token = await getToken();
-            const response = await fetch(`http://localhost:8080/api/v1/statistics/fixture/${fixture.id}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+            if (!token) throw new Error("Token mangler.");
+            
+            // Hent både lag- og spillerstatistikk parallelt for best ytelse
+            const [teamStatsResponse, playerStatsResponse] = await Promise.all([
+                fetch(`http://localhost:8080/api/v1/statistics/fixture/${fixture.id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }),
+                fetch(`http://localhost:8080/api/v1/statistics/players/fixture/${fixture.id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                })
+            ]);
+            
+            const teamStats = teamStatsResponse.ok ? await teamStatsResponse.json() : [];
+            const playerStats = playerStatsResponse.ok ? await playerStatsResponse.json() : [];
+
+            setModalData({ 
+                teamStats, 
+                playerStats, 
+                fixtureInfo: { homeTeamName: fixture.homeTeamName, awayTeamName: fixture.awayTeamName } 
             });
-            if (!response.ok) throw new Error("Statistikk for denne kampen er ikke tilgjengelig.");
-            const stats: MatchStat[] = await response.json();
-            setModalData({ stats, fixtureInfo: { homeTeamName: fixture.homeTeamName, awayTeamName: fixture.awayTeamName } });
+
         } catch (err: any) {
             console.error(err);
-            setModalData({ stats: [], fixtureInfo: { homeTeamName: 'Feil', awayTeamName: err.message } });
+            setError("Kunne ikke laste all kampdata.");
+            setModalData({ 
+                teamStats: [], 
+                playerStats: [], 
+                fixtureInfo: { homeTeamName: 'Feil', awayTeamName: err.message } 
+            });
         } finally {
              setIsLoadingModal(false);
         }
@@ -187,7 +206,6 @@ const TeamDetailsPage: React.FC = () => {
                 </div>
             </div>
             
-            {/* --- GRAF-SEKSJON MED VALG --- */}
             <div className="chart-wrapper">
                 <div className="chart-controls">
                     {Object.keys(STAT_CONFIG).map(key => (
@@ -219,7 +237,8 @@ const TeamDetailsPage: React.FC = () => {
             <MatchStatsModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                stats={modalData?.stats || []}
+                teamStats={modalData?.teamStats || []}
+                playerStats={modalData?.playerStats || []}
                 fixtureInfo={modalData?.fixtureInfo || { homeTeamName: '', awayTeamName: '' }}
                 isLoading={isLoadingModal}
             />

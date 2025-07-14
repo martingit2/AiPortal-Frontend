@@ -10,10 +10,12 @@ interface CreateBotModalProps {
   onBotCreated: () => void;
 }
 
-// Oppdater dette interfacet til å inkludere ALLE nye bot-typer
+// Oppdatert interface for å inkludere ALLE bot-typer
+type BotSourceType = 'TWITTER' | 'SPORT_API' | 'LEAGUE_STATS' | 'HISTORICAL_FIXTURE_DATA' | 'PINNACLE_ODDS' | 'STOCK_API' | 'CRYPTO_API';
+
 interface BotFormData {
   name: string;
-  sourceType: 'TWITTER' | 'SPORT_API' | 'LEAGUE_STATS' | 'HISTORICAL_FIXTURE_DATA' | 'STOCK_API' | 'CRYPTO_API';
+  sourceType: BotSourceType;
   sourceIdentifier: string;
 }
 
@@ -33,7 +35,7 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value as BotFormData[keyof BotFormData] }));
+    setFormData(prev => ({ ...prev, [name]: value as any }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -68,7 +70,6 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
     }
   };
 
-  // Hjelpetekst som endrer seg basert på valgt kildetype
   const getPlaceholderText = () => {
     switch (formData.sourceType) {
       case 'TWITTER':
@@ -76,9 +77,11 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
       case 'SPORT_API':
         return "For enkelt-lag: 'ligaId:sesong:lagId'";
       case 'LEAGUE_STATS':
-        return "For hel liga (kun lag-stats): 'ligaId:sesong'";
+        return "For hel liga (tabell): 'ligaId:sesong'";
       case 'HISTORICAL_FIXTURE_DATA':
-        return "For hel sesong (kamp-stats): 'ligaId:sesong'";
+        return "For hel sesong (kamp-data): 'ligaId:sesong'";
+      case 'PINNACLE_ODDS':
+        return "Sport ID, f.eks. '1' for fotball";
       default:
         return 'Kilde-identifikator';
     }
@@ -100,7 +103,7 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="F.eks. 'Premier League 2023 Historikk'"
+              placeholder="F.eks. 'Pinnacle Fotball Odds'"
               required
               disabled={isSubmitting}
             />
@@ -116,9 +119,10 @@ const CreateBotModal: React.FC<CreateBotModalProps> = ({ isOpen, onClose, onBotC
               disabled={isSubmitting}
             >
               <option value="TWITTER">Twitter</option>
-              <option value="SPORT_API">Sport API (Enkelt-lag)</option>
-              <option value="LEAGUE_STATS">Liga-statistikk (Oversikt)</option>
+              <option value="PINNACLE_ODDS">Pinnacle Odds</option> {/* <-- NYTT VALG */}
+              <option value="LEAGUE_STATS">Liga-statistikk (Tabell)</option>
               <option value="HISTORICAL_FIXTURE_DATA">Historisk Kampdata (Detaljert)</option>
+              <option value="SPORT_API">Sport API (Enkelt-lag)</option>
               <option value="STOCK_API">Aksje API</option>
               <option value="CRYPTO_API">Krypto API</option>
             </select>

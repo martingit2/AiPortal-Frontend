@@ -137,3 +137,23 @@
 .clickable-row:hover {
     background-color: #e8f4fd !important; /* Overstyrer annen hover-effekt */
 }
+
+/* Ny styling for sesjons-seksjoner */
+.season-section {
+    margin-bottom: 2rem;
+}
+
+.season-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.8rem;
+    color: var(--text-on-light-primary);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-color-light);
+}
+
+.season-title svg {
+    color: var(--neutral-medium);
+}

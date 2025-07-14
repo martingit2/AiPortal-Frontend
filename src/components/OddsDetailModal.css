@@ -1,0 +1,53 @@
+/* src/components/OddsDetailModal.css */
+
+.odds-modal-content {
+  background-color: #1a222e;
+  color: #dfe4ed;
+  padding: 1.5rem 2rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  width: 100%;
+  max-width: 600px; /* En passende bredde for odds */
+  animation: fadeIn 0.3s ease-out;
+  border: 1px solid #2f4050; 
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.odds-modal-header {
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #2f4050; 
+}
+
+.odds-modal-header h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  color: #ffffff;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.odds-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.odds-detail-table th,
+.odds-detail-table td {
+    padding: 0.75rem;
+    text-align: center;
+    border-bottom: 1px solid #2f4050;
+}
+
+.odds-detail-table thead {
+    color: #a7b1c2;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.odds-detail-table td {
+    font-weight: 600;
+    font-size: 1rem;
+}

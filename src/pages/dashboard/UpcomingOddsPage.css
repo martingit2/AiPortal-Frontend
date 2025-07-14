@@ -1,0 +1,52 @@
+/* src/pages/dashboard/UpcomingOddsPage.css */
+
+.odds-overview-container {
+    background-color: var(--background-light);
+    border: 1px solid var(--border-color-light);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.odds-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.odds-table th,
+.odds-table td {
+    padding: 0.85rem 1.25rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color-light);
+}
+
+.odds-table thead {
+    background-color: #FAFBFC;
+}
+
+.odds-table th {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-on-light-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.odds-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.odds-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.odds-status.available {
+    color: #27ae60;
+}
+
+.odds-status.missing {
+    color: #e74c3c;
+}

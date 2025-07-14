@@ -4,8 +4,6 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  --accent-color-highlight: #80CBC4; 
-  --accent-color-highlight-rgb: 128, 203, 196; /* For rgba() */
 
   color-scheme: light dark; /* Lar nettleseren velge tema basert på OS-innstilling */
   /* Fargene under vil kun gjelde hvis 'dark' scheme er aktiv og ikke overstyrt av din egen CSS */
@@ -77,3 +75,13 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 } */
+
+::selection {
+  background-color: var(--accent-color-highlight, #80CBC4); /* Den grønnblå aksentfargen som bakgrunn */
+  color: #1a222e; /* Mørk tekst for god kontrast mot den lyse markeringsfargen */
+}
+
+::-moz-selection { /* For Firefox */
+  background-color: var(--accent-color-highlight, #80CBC4);
+  color: #1a222e;
+}

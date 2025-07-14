@@ -6,9 +6,12 @@
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   width: 100%;
-  max-width: 600px;
+  max-width: 900px;
   animation: fadeIn 0.3s ease-out;
-  border: 1px solid #2f4050; 
+  border: 1px solid #2f4050;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .stats-modal-header {
@@ -18,6 +21,7 @@
   border-bottom: 1px solid #2f4050; 
   padding-bottom: 1rem;
   margin-bottom: 1rem;
+  flex-shrink: 0;
 }
 
 .stats-modal-header h2 {
@@ -27,6 +31,40 @@
   font-size: 1.5rem;
 }
 
+.modal-tabs {
+  display: flex;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #2f4050;
+  flex-shrink: 0;
+}
+
+.modal-tab {
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  color: #a7b1c2;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.modal-tab:hover {
+  color: #ffffff;
+}
+
+.modal-tab.active {
+  color: var(--accent-color-highlight, #80CBC4);
+  border-bottom-color: var(--accent-color-highlight, #80CBC4);
+}
+
+.modal-content-area {
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+/* Lag-statistikk */
 .teams-header {
     display: flex;
     justify-content: space-around;
@@ -35,39 +73,83 @@
     margin-bottom: 1.5rem;
     font-size: 1.1rem;
 }
-.teams-header h3 {
-    margin: 0;
-    flex: 1;
-}
-.teams-header span {
-    color: var(--neutral-medium);
-}
+.teams-header h3 { margin: 0; flex: 1; }
+.teams-header span { color: var(--neutral-medium); }
 
 .stats-comparison-table {
     width: 100%;
     border-collapse: collapse;
 }
+.stats-comparison-table th, .stats-comparison-table td { padding: 0.75rem 0; text-align: center; }
+.stats-comparison-table th { font-weight: 500; color: var(--neutral-light); font-size: 0.9rem; }
+.stats-comparison-table td { font-size: 1.1rem; font-weight: 600; width: 35%; }
+.stats-comparison-table tr:not(:last-child) { border-bottom: 1px solid #2f4050; }
+.stats-comparison-table .winner { color: var(--accent-color-highlight); }
 
-.stats-comparison-table th, .stats-comparison-table td {
-    padding: 0.75rem 0;
-    text-align: center;
+
+/* Spiller-stats grid */
+.player-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
 }
 
-.stats-comparison-table th {
-    font-weight: 500;
-    color: var(--neutral-light);
-    font-size: 0.9rem;
-}
-.stats-comparison-table td {
-    font-size: 1.1rem;
-    font-weight: 600;
-    width: 35%;
-}
-
-.stats-comparison-table tr:not(:last-child) {
+.team-player-list h4 {
+    font-family: var(--font-display);
+    color: var(--accent-color-highlight, #80CBC4);
     border-bottom: 1px solid #2f4050;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
 
-.stats-comparison-table .winner {
-    color: var(--accent-color-highlight);
+.player-stats-table {
+    width: 100%;
+    font-size: 0.85rem;
+    border-collapse: collapse;
+}
+
+.player-stats-table th,
+.player-stats-table td {
+    padding: 0.6rem 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid #2f4050;
+    white-space: nowrap;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.player-stats-table thead {
+    color: #a7b1c2;
+    font-weight: 600;
+}
+
+.player-stats-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.player-stats-table tbody tr:hover td {
+    background-color: rgba(var(--accent-color-highlight-rgb), 0.1);
+}
+
+.player-stats-table td.rating { font-weight: 700; }
+.player-stats-table td.numeric { text-align: center; }
+
+/* --- SISTE FORSØK: MER SPESIFIKK OG KRAFTIG REGEL --- */
+/* Vi sikter oss inn på tabellradene direkte og endrer både bakgrunn og tekstfarge når de eller noe inni dem får fokus */
+.player-stats-table tbody tr:focus-within {
+  background-color: rgba(var(--accent-color-highlight-rgb), 0.2) !important;
+  color: #FFFFFF !important;
+}
+
+/* Sikrer at også cellene arver fargen for å unngå konflikter */
+.player-stats-table tbody tr:focus-within td {
+  background-color: inherit !important;
+  color: inherit !important;
+}
+
+/* Fjerner den standard browser-outline som en ekstra forholdsregel */
+.player-stats-table :focus {
+  outline: none !important;
+  box-shadow: none !important;
 }

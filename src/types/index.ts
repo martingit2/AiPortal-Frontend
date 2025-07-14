@@ -19,7 +19,7 @@ export interface Fixture {
 }
 
 /**
- * Representerer detaljert kampstatistikk for ett lag i en kamp.
+ * Representerer detaljert lag-statistikk for én kamp.
  * Matcher MatchStatisticsDto fra backend.
  */
 export interface MatchStat {
@@ -41,6 +41,27 @@ export interface MatchStat {
   passesAccurate: number;
   passesPercentage: string;
 }
+
+/**
+ * NY TYPE: Representerer detaljert spillerstatistikk for én kamp.
+ * Matcher PlayerMatchStatisticsDto fra backend.
+ */
+export interface PlayerMatchStat {
+  playerId: number;
+  playerName: string;
+  teamId: number;
+  minutesPlayed: number;
+  rating: string | null;
+  captain: boolean;
+  substitute: boolean;
+  shotsTotal: number;
+  shotsOnGoal: number;
+  goalsTotal: number;
+  assists: number;
+  passesTotal: number;
+  passesKey: number;
+}
+
 
 /**
  * Representerer et verdispill i oddsanalysen.
@@ -72,4 +93,22 @@ export interface PaginatedResponse<T> {
   totalPages: number;
   totalElements: number;
   number: number; // Nåværende side (0-indeksert)
+}
+
+export interface MatchOdds {
+  bookmakerName: string;
+  homeOdds: number;
+  drawOdds: number;
+  awayOdds: number;
+}
+
+
+export interface UpcomingFixtureWithOdds {
+  fixtureId: number;
+  date: string;
+  homeTeamName: string;
+  awayTeamName: string;
+  leagueName: string;
+  hasOdds: boolean;
+  odds: MatchOdds[]; 
 }

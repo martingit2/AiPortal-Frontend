@@ -1,39 +1,119 @@
 // src/components/MatchStatsModal.tsx
 
-import React from 'react';
-import { RefreshCw, X } from 'lucide-react'; // Importer RefreshCw
+import React, { useState } from 'react';
+import { RefreshCw, X, Users, BarChart } from 'lucide-react';
 import './MatchStatsModal.css';
-import type { MatchStat } from '../types';
-
+import type { MatchStat, PlayerMatchStat } from '../types';
 
 interface MatchStatsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  stats: MatchStat[];
+  teamStats: MatchStat[];
+  playerStats: PlayerMatchStat[];
   fixtureInfo: { homeTeamName: string; awayTeamName: string };
-  isLoading: boolean; // <-- LEGG TIL DENNE PROPEN
+  isLoading: boolean;
 }
 
-const StatRow: React.FC<{ label: string; home: any; away: any }> = ({ label, home, away }) => {
-  const homeValue = home ?? 'N/A';
-  const awayValue = away ?? 'N/A';
-  
-  const homeNum = parseInt(homeValue, 10);
-  const awayNum = parseInt(awayValue, 10);
-  
-  const homeClass = !isNaN(homeNum) && !isNaN(awayNum) && homeNum > awayNum ? 'winner' : '';
-  const awayClass = !isNaN(homeNum) && !isNaN(awayNum) && awayNum > homeNum ? 'winner' : '';
+const TeamComparison: React.FC<{ teamStats: MatchStat[]; fixtureInfo: { homeTeamName: string; awayTeamName: string }; }> = ({ teamStats, fixtureInfo }) => {
+  const homeStats = teamStats.find(s => s.teamName === fixtureInfo.homeTeamName);
+  const awayStats = teamStats.find(s => s.teamName === fixtureInfo.awayTeamName);
 
+  if (!homeStats || !awayStats) {
+    return <p>Lagstatistikk er ikke tilgjengelig.</p>;
+  }
+  
+  const StatRow: React.FC<{ label: string; home: any; away: any }> = ({ label, home, away }) => {
+    const homeValue = home ?? 'N/A';
+    const awayValue = away ?? 'N/A';
+    const homeNum = parseInt(String(homeValue).replace('%', ''));
+    const awayNum = parseInt(String(awayValue).replace('%', ''));
+    const homeClass = !isNaN(homeNum) && !isNaN(awayNum) && homeNum > awayNum ? 'winner' : '';
+    const awayClass = !isNaN(homeNum) && !isNaN(awayNum) && awayNum > homeNum ? 'winner' : '';
+    return (
+      <tr>
+        <td className={homeClass}>{homeValue}</td>
+        <th>{label}</th>
+        <td className={awayClass}>{awayValue}</td>
+      </tr>
+    );
+  };
+  
   return (
-    <tr>
-      <td className={homeClass}>{homeValue}</td>
-      <th>{label}</th>
-      <td className={awayClass}>{awayValue}</td>
-    </tr>
+    <>
+      <div className="teams-header">
+        <h3>{homeStats.teamName}</h3>
+        <span>vs</span>
+        <h3>{awayStats.teamName}</h3>
+      </div>
+      <table className="stats-comparison-table">
+        <tbody>
+          <StatRow label="Ballbesittelse" home={homeStats.ballPossession} away={awayStats.ballPossession} />
+          <StatRow label="Skudd på mål" home={homeStats.shotsOnGoal} away={awayStats.shotsOnGoal} />
+          <StatRow label="Skudd totalt" home={homeStats.totalShots} away={awayStats.totalShots} />
+          <StatRow label="Hjørnespark" home={homeStats.cornerKicks} away={awayStats.cornerKicks} />
+          <StatRow label="Frispark" home={homeStats.fouls} away={awayStats.fouls} />
+          <StatRow label="Keeperredninger" home={homeStats.goalkeeperSaves} away={awayStats.goalkeeperSaves} />
+          <StatRow label="Gule kort" home={homeStats.yellowCards} away={awayStats.yellowCards} />
+        </tbody>
+      </table>
+    </>
   );
 };
 
-const MatchStatsModal: React.FC<MatchStatsModalProps> = ({ isOpen, onClose, stats, fixtureInfo, isLoading }) => {
+const PlayerRatings: React.FC<{ playerStats: PlayerMatchStat[]; fixtureInfo: { homeTeamName: string; awayTeamName: string; }; }> = ({ playerStats, fixtureInfo }) => {
+    // Finner teamId for et av lagene for å kunne splitte spillerne korrekt
+    const homeTeamId = playerStats.find(p => p.teamId)?.teamId;
+    const homePlayers = playerStats.filter(p => p.teamId === homeTeamId).sort((a,b) => (a.substitute ? 1 : -1) - (b.substitute ? 1 : -1));
+    const awayPlayers = playerStats.filter(p => p.teamId !== homeTeamId).sort((a,b) => (a.substitute ? 1 : -1) - (b.substitute ? 1 : -1));
+
+    const renderPlayerTable = (players: PlayerMatchStat[]) => (
+        <table className="player-stats-table">
+          <thead>
+            <tr>
+              <th>Spiller</th>
+              <th className="numeric">Rating</th>
+              <th className="numeric">Mål</th>
+              <th className="numeric">Assists</th>
+              <th className="numeric">Skudd</th>
+              <th className="numeric">Min</th>
+            </tr>
+          </thead>
+          <tbody>
+            {players.map(p => (
+              <tr key={p.playerId} style={{ opacity: p.substitute ? 0.7 : 1 }}>
+                <td>{p.playerName}{p.captain && ' (C)'}</td>
+                <td className="numeric rating">{p.rating || '-'}</td>
+                <td className="numeric">{p.goalsTotal}</td>
+                <td className="numeric">{p.assists}</td>
+                <td className="numeric">{p.shotsTotal}</td>
+                <td className="numeric">{p.minutesPlayed}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+    );
+    
+    if (playerStats.length === 0) {
+        return <p>Spillerstatistikk er ikke tilgjengelig for denne kampen.</p>;
+    }
+
+    return (
+        <div className="player-stats-grid">
+            <div className="team-player-list">
+                <h4>{fixtureInfo.homeTeamName}</h4>
+                {renderPlayerTable(homePlayers)}
+            </div>
+            <div className="team-player-list">
+                <h4>{fixtureInfo.awayTeamName}</h4>
+                {renderPlayerTable(awayPlayers)}
+            </div>
+        </div>
+    );
+};
+
+const MatchStatsModal: React.FC<MatchStatsModalProps> = ({ isOpen, onClose, teamStats, playerStats, fixtureInfo, isLoading }) => {
+  const [activeTab, setActiveTab] = useState<'team' | 'player'>('team');
+
   if (!isOpen) return null;
 
   const renderContent = () => {
@@ -45,41 +125,24 @@ const MatchStatsModal: React.FC<MatchStatsModalProps> = ({ isOpen, onClose, stat
         </div>
       );
     }
-
-    const homeStats = stats.find(s => s.teamName === fixtureInfo.homeTeamName);
-    const awayStats = stats.find(s => s.teamName === fixtureInfo.awayTeamName);
-
-    if (!homeStats || !awayStats) {
-      return (
-        <div className="modal-loading-state">
-          <p>Data er ikke tilgjengelig for denne kampen.</p>
-        </div>
-      );
-    }
     
     return (
       <>
-        <div className="teams-header">
-          <h3>{homeStats.teamName}</h3>
-          <span>vs</span>
-          <h3>{awayStats.teamName}</h3>
+        <div className="modal-tabs">
+          <button className={`modal-tab ${activeTab === 'team' ? 'active' : ''}`} onClick={() => setActiveTab('team')}>
+            <Users size={16} style={{marginRight: '0.5rem'}}/> Lagstatistikk
+          </button>
+          <button className={`modal-tab ${activeTab === 'player' ? 'active' : ''}`} onClick={() => setActiveTab('player')}>
+            <BarChart size={16} style={{marginRight: '0.5rem'}}/> Spillerstatistikk
+          </button>
         </div>
-        <table className="stats-comparison-table">
-          <tbody>
-            <StatRow label="Ballbesittelse" home={homeStats.ballPossession} away={awayStats.ballPossession} />
-            <StatRow label="Skudd på mål" home={homeStats.shotsOnGoal} away={awayStats.shotsOnGoal} />
-            <StatRow label="Skudd utenfor" home={homeStats.shotsOffGoal} away={awayStats.shotsOffGoal} />
-            <StatRow label="Totalt antall skudd" home={homeStats.totalShots} away={awayStats.totalShots} />
-            <StatRow label="Blokkerte skudd" home={homeStats.blockedShots} away={awayStats.blockedShots} />
-            <StatRow label="Hjørnespark" home={homeStats.cornerKicks} away={awayStats.cornerKicks} />
-            <StatRow label="Frispark" home={homeStats.fouls} away={awayStats.fouls} />
-            <StatRow label="Offsides" home={homeStats.offsides} away={awayStats.offsides} />
-            <StatRow label="Keeperredninger" home={homeStats.goalkeeperSaves} away={awayStats.goalkeeperSaves} />
-            <StatRow label="Gule kort" home={homeStats.yellowCards} away={awayStats.yellowCards} />
-            <StatRow label="Røde kort" home={homeStats.redCards} away={awayStats.redCards} />
-            <StatRow label="Vellykkede pasninger" home={`${homeStats.passesAccurate} (${homeStats.passesPercentage})`} away={`${awayStats.passesAccurate} (${awayStats.passesPercentage})`} />
-          </tbody>
-        </table>
+        <div className="modal-content-area">
+          {activeTab === 'team' ? (
+            <TeamComparison teamStats={teamStats} fixtureInfo={fixtureInfo} />
+          ) : (
+            <PlayerRatings playerStats={playerStats} fixtureInfo={fixtureInfo} />
+          )}
+        </div>
       </>
     );
   };
