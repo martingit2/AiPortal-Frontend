@@ -2,9 +2,8 @@
 
 import React from 'react';
 import { X } from 'lucide-react';
-
-import './OddsDetailModal.css';
 import type { UpcomingFixtureWithOdds } from '../types';
+import './OddsDetailModal.css';
 
 interface OddsDetailModalProps {
   isOpen: boolean;
@@ -16,6 +15,11 @@ const OddsDetailModal: React.FC<OddsDetailModalProps> = ({ isOpen, onClose, fixt
   if (!isOpen || !fixture) {
     return null;
   }
+
+  const oddsByBookmaker = fixture.odds.reduce((acc, odd) => {
+    (acc[odd.bookmakerName] = acc[odd.bookmakerName] || []).push(odd);
+    return acc;
+  }, {} as Record<string, typeof fixture.odds>);
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -30,26 +34,36 @@ const OddsDetailModal: React.FC<OddsDetailModalProps> = ({ isOpen, onClose, fixt
         </div>
 
         <div className="modal-content-area">
-          <table className="odds-detail-table">
-            <thead>
-              <tr>
-                <th>Bookmaker</th>
-                <th>Hjemme (1)</th>
-                <th>Uavgjort (X)</th>
-                <th>Borte (2)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {fixture.odds.map((odd, index) => (
-                <tr key={index}>
-                  <td>{odd.bookmakerName}</td>
-                  <td>{odd.homeOdds.toFixed(2)}</td>
-                  <td>{odd.drawOdds.toFixed(2)}</td>
-                  <td>{odd.awayOdds.toFixed(2)}</td>
-                </tr>
+          {Object.entries(oddsByBookmaker).map(([bookmakerName, oddsList]) => (
+            <div key={bookmakerName} className="bookmaker-section">
+              <h4>{bookmakerName}</h4>
+              {oddsList.map((market, marketIndex) => (
+                <div key={marketIndex} className="market-section">
+                  <h5>{market.betName}</h5>
+                  <table className="odds-detail-table">
+                    <thead>
+                      <tr>
+                        <th>Valg</th>
+                        {market.odds[0]?.handicap && <th>Handicap</th>}
+                        {market.odds[0]?.points && <th>Linje</th>}
+                        <th>Odds</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {market.odds.map((detail, detailIndex) => (
+                        <tr key={detailIndex}>
+                          <td>{detail.name}</td>
+                          {detail.handicap && <td>{detail.handicap}</td>}
+                          {detail.points && <td>{detail.points}</td>}
+                          <td>{detail.odds.toFixed(2)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          ))}
         </div>
       </div>
     </div>

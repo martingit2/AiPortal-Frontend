@@ -3,9 +3,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import { RefreshCw, AlertTriangle, HelpCircle, CheckCircle, XCircle } from 'lucide-react';
-import OddsDetailModal from '../../components/OddsDetailModal'; // <-- NY IMPORT
+import OddsDetailModal from '../../components/OddsDetailModal';
 import './UpcomingOddsPage.css';
-import type { UpcomingFixtureWithOdds } from '../../types'; // <-- Oppdatert import
+import type { UpcomingFixtureWithOdds } from '../../types';
 
 const UpcomingOddsPage: React.FC = () => {
   const [fixtures, setFixtures] = useState<UpcomingFixtureWithOdds[]>([]);
@@ -13,7 +13,6 @@ const UpcomingOddsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { getToken } = useAuth();
 
-  // State for den nye modalen
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFixture, setSelectedFixture] = useState<UpcomingFixtureWithOdds | null>(null);
 
@@ -41,7 +40,6 @@ const UpcomingOddsPage: React.FC = () => {
     fetchUpcomingOdds();
   }, [fetchUpcomingOdds]);
 
-  // Funksjon for å åpne modalen
   const handleRowClick = (fixture: UpcomingFixtureWithOdds) => {
     if (fixture.hasOdds) {
       setSelectedFixture(fixture);
@@ -52,12 +50,17 @@ const UpcomingOddsPage: React.FC = () => {
   const renderContent = () => {
     if (isLoading) return <div className="loading-state"><RefreshCw className="loading-spinner" size={48} /><p>Henter oversikt...</p></div>;
     if (error) return <div className="error-box full-page-error"><AlertTriangle size={32} /><p>{error}</p></div>;
-    if (fixtures.length === 0) {
+
+    const validFixtures = fixtures.filter(
+      fixture => fixture.homeTeamName && fixture.awayTeamName && fixture.homeTeamName.trim() !== ''
+    );
+
+    if (validFixtures.length === 0) {
       return (
         <div className="empty-state">
           <HelpCircle size={48} />
           <h3>Ingen kommende kamper</h3>
-          <p>Systemet fant ingen kommende kamper i databasen.</p>
+          <p>Systemet fant ingen kommende kamper med fullstendig informasjon i databasen.</p>
         </div>
       );
     }
@@ -74,7 +77,7 @@ const UpcomingOddsPage: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {fixtures.map(fixture => (
+            {validFixtures.map(fixture => (
               <tr 
                 key={fixture.fixtureId} 
                 className={fixture.hasOdds ? 'clickable-row' : ''}

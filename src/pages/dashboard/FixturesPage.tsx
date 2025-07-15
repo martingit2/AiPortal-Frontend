@@ -5,11 +5,13 @@ import { useAuth } from '@clerk/clerk-react';
 import { RefreshCw, AlertTriangle, ShieldX } from 'lucide-react';
 import MatchStatsModal from '../../components/MatchStatsModal';
 import './FixturesPage.css';
-import type { Fixture, MatchStat, PaginatedResponse } from '../../types';
+import type { Fixture, MatchStat, PlayerMatchStat, PaginatedResponse } from '../../types';
 
 
+// Interface for modalens data som matcher det modalen forventer
 interface ModalData {
-  stats: MatchStat[];
+  teamStats: MatchStat[];
+  playerStats: PlayerMatchStat[];
   fixtureInfo: { homeTeamName: string; awayTeamName: string };
 }
 
@@ -25,7 +27,7 @@ const FixturesPage: React.FC = () => {
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState<ModalData | null>(null);
-  const [isLoadingModal, setIsLoadingModal] = useState(false); // <--- VI BRUKER DENNE
+  const [isLoadingModal, setIsLoadingModal] = useState(false);
 
   const fetchFixtures = useCallback(async (fetchPage: number, append = false) => {
     if (!append) {
@@ -78,29 +80,53 @@ const FixturesPage: React.FC = () => {
     }
   };
 
+  
   const handleRowClick = async (fixture: Fixture) => {
     if (activeTab !== 'results') return;
     
-    setIsLoadingModal(true); // <-- Setter lasting til true
+    setIsLoadingModal(true);
     setIsModalOpen(true);
     setModalData(null);
     try {
         const token = await getToken();
-        const response = await fetch(`http://localhost:8080/api/v1/statistics/fixture/${fixture.id}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (!response.ok) {
-            throw new Error("Statistikk for denne kampen er ikke tilgjengelig.");
+        if (!token) throw new Error("Autentiseringstoken mangler.");
+
+        // Hent BÅDE lag- og spillerstatistikk parallelt
+        const [teamStatsResponse, playerStatsResponse] = await Promise.all([
+            fetch(`http://localhost:8080/api/v1/statistics/fixture/${fixture.id}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            }),
+            fetch(`http://localhost:8080/api/v1/statistics/players/fixture/${fixture.id}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+        ]);
+
+        // Sjekk hver respons individuelt, slik at vi kan vise noe selv om en feiler
+        const teamStats = teamStatsResponse.ok ? await teamStatsResponse.json() : [];
+        const playerStats = playerStatsResponse.ok ? await playerStatsResponse.json() : [];
+
+        if (!teamStatsResponse.ok && !playerStatsResponse.ok) {
+          throw new Error("Kunne ikke hente verken lag- eller spillerstatistikk.");
         }
-        const stats: MatchStat[] = await response.json();
-        setModalData({ stats, fixtureInfo: { homeTeamName: fixture.homeTeamName, awayTeamName: fixture.awayTeamName } });
+        
+        setModalData({ 
+            teamStats, 
+            playerStats,
+            fixtureInfo: { homeTeamName: fixture.homeTeamName, awayTeamName: fixture.awayTeamName } 
+        });
+
     } catch (err: any) {
         console.error(err);
-        setModalData({ stats: [], fixtureInfo: { homeTeamName: 'Feil', awayTeamName: err.message } });
+        setModalData({ 
+            teamStats: [], 
+            playerStats: [],
+            fixtureInfo: { homeTeamName: 'Feil', awayTeamName: err.message } 
+        });
     } finally {
-        setIsLoadingModal(false); // <-- Setter lasting til false
+        setIsLoadingModal(false);
     }
   };
+  
 
   const renderContent = () => {
     if (isLoading) return <div className="loading-state"><RefreshCw className="loading-spinner" size={48} /><p>Laster kamper...</p></div>;
@@ -193,9 +219,10 @@ const FixturesPage: React.FC = () => {
         <MatchStatsModal
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
-            stats={modalData?.stats || []}
+            teamStats={modalData?.teamStats || []}
+            playerStats={modalData?.playerStats || []}
             fixtureInfo={modalData?.fixtureInfo || { homeTeamName: '', awayTeamName: '' }}
-            isLoading={isLoadingModal} // <-- DEN MANGLENDE LINJEN ER NÅ LAGT TIL
+            isLoading={isLoadingModal}
         />
     </div>
   );

@@ -1,5 +1,4 @@
 /* src/components/OddsDetailModal.css */
-
 .odds-modal-content {
   background-color: #1a222e;
   color: #dfe4ed;
@@ -7,7 +6,7 @@
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   width: 100%;
-  max-width: 600px; /* En passende bredde for odds */
+  max-width: 700px;
   animation: fadeIn 0.3s ease-out;
   border: 1px solid #2f4050; 
   max-height: 90vh;
@@ -18,7 +17,8 @@
 .odds-modal-header {
   padding-bottom: 1rem;
   margin-bottom: 1rem;
-  border-bottom: 1px solid #2f4050; 
+  border-bottom: 1px solid #2f4050;
+  flex-shrink: 0;
 }
 
 .odds-modal-header h3 {
@@ -29,25 +29,56 @@
   text-align: center;
 }
 
+.modal-content-area {
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.bookmaker-section {
+  margin-bottom: 2rem;
+}
+.bookmaker-section:last-child {
+  margin-bottom: 0;
+}
+.bookmaker-section h4 {
+  font-family: var(--font-display);
+  color: var(--accent-color-highlight);
+  border-bottom: 1px solid #2f4050;
+  padding-bottom: 0.5rem;
+  margin: 0 0 1rem 0;
+}
+
+.market-section {
+  margin-bottom: 1.5rem;
+}
+.market-section h5 {
+  margin: 0 0 0.75rem 0;
+  color: #a7b1c2;
+  font-weight: 500;
+}
+
 .odds-detail-table {
   width: 100%;
   border-collapse: collapse;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  overflow: hidden;
 }
-
-.odds-detail-table th,
-.odds-detail-table td {
+.odds-detail-table th, .odds-detail-table td {
     padding: 0.75rem;
-    text-align: center;
+    text-align: left;
     border-bottom: 1px solid #2f4050;
 }
-
 .odds-detail-table thead {
     color: #a7b1c2;
     font-size: 0.8rem;
     text-transform: uppercase;
+    background-color: rgba(255, 255, 255, 0.05);
 }
-
+.odds-detail-table tbody tr:last-child td {
+    border-bottom: none;
+}
 .odds-detail-table td {
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 0.9rem;
 }

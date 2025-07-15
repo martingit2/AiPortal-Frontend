@@ -1,9 +1,5 @@
 // src/types/index.ts
 
-/**
- * Representerer en kamp, enten kommende eller spilt.
- * Matcher Fixture-entiteten fra backend.
- */
 export interface Fixture {
   id: number;
   date: string;
@@ -18,10 +14,6 @@ export interface Fixture {
   status: string;
 }
 
-/**
- * Representerer detaljert lag-statistikk for én kamp.
- * Matcher MatchStatisticsDto fra backend.
- */
 export interface MatchStat {
   teamName: string;
   shotsOnGoal: number;
@@ -42,10 +34,6 @@ export interface MatchStat {
   passesPercentage: string;
 }
 
-/**
- * NY TYPE: Representerer detaljert spillerstatistikk for én kamp.
- * Matcher PlayerMatchStatisticsDto fra backend.
- */
 export interface PlayerMatchStat {
   playerId: number;
   playerName: string;
@@ -62,11 +50,32 @@ export interface PlayerMatchStat {
   passesKey: number;
 }
 
+// NY: Detaljert struktur for et enkelt odds-valg
+export interface OddDetail {
+  name: string;
+  odds: number;
+  handicap?: string;
+  points?: string;
+}
 
-/**
- * Representerer et verdispill i oddsanalysen.
- * Matcher ValueBetDto fra backend.
- */
+// Oppdatert for å reflektere den nye DTO-en
+export interface MatchOdds {
+  bookmakerName: string;
+  betName: string;
+  odds: OddDetail[]; // Bruker den nye, detaljerte typen
+}
+
+// Oppdatert for å reflektere den nye DTO-en
+export interface UpcomingFixtureWithOdds {
+  fixtureId: number;
+  date: string;
+  homeTeamName: string;
+  awayTeamName: string;
+  leagueName: string;
+  hasOdds: boolean;
+  odds: MatchOdds[];
+}
+
 export interface ValueBet {
   fixtureId: number;
   homeTeamName: string;
@@ -85,30 +94,9 @@ export interface ValueBet {
   marketDescription: string | null;
 }
 
-/**
- * Generisk grensesnitt for paginerte responser fra Spring Boot.
- */
 export interface PaginatedResponse<T> {
   content: T[];
   totalPages: number;
   totalElements: number;
-  number: number; // Nåværende side (0-indeksert)
-}
-
-export interface MatchOdds {
-  bookmakerName: string;
-  homeOdds: number;
-  drawOdds: number;
-  awayOdds: number;
-}
-
-
-export interface UpcomingFixtureWithOdds {
-  fixtureId: number;
-  date: string;
-  homeTeamName: string;
-  awayTeamName: string;
-  leagueName: string;
-  hasOdds: boolean;
-  odds: MatchOdds[]; 
+  number: number;
 }
