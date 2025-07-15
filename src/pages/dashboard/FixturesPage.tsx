@@ -5,13 +5,14 @@ import { useAuth } from '@clerk/clerk-react';
 import { RefreshCw, AlertTriangle, ShieldX } from 'lucide-react';
 import MatchStatsModal from '../../components/MatchStatsModal';
 import './FixturesPage.css';
-import type { Fixture, MatchStat, PlayerMatchStat, PaginatedResponse } from '../../types';
+import type { Fixture, MatchStat, PlayerMatchStat, HeadToHeadStats, PaginatedResponse } from '../../types';
 
 
-// Interface for modalens data som matcher det modalen forventer
+// Oppdatert ModalData-interfacet til å inkludere H2H
 interface ModalData {
   teamStats: MatchStat[];
   playerStats: PlayerMatchStat[];
+  h2hStats: HeadToHeadStats | null;
   fixtureInfo: { homeTeamName: string; awayTeamName: string };
 }
 
@@ -80,7 +81,6 @@ const FixturesPage: React.FC = () => {
     }
   };
 
-  
   const handleRowClick = async (fixture: Fixture) => {
     if (activeTab !== 'results') return;
     
@@ -91,27 +91,27 @@ const FixturesPage: React.FC = () => {
         const token = await getToken();
         if (!token) throw new Error("Autentiseringstoken mangler.");
 
-        // Hent BÅDE lag- og spillerstatistikk parallelt
-        const [teamStatsResponse, playerStatsResponse] = await Promise.all([
+        // Hent all statistikk parallelt for best ytelse
+        const [teamStatsResponse, playerStatsResponse, h2hStatsResponse] = await Promise.all([
             fetch(`http://localhost:8080/api/v1/statistics/fixture/${fixture.id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             }),
             fetch(`http://localhost:8080/api/v1/statistics/players/fixture/${fixture.id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
+            }),
+            fetch(`http://localhost:8080/api/v1/statistics/h2h/${fixture.id}`, { // <-- Henter H2H-data
+                headers: { 'Authorization': `Bearer ${token}` }
             })
         ]);
 
-        // Sjekk hver respons individuelt, slik at vi kan vise noe selv om en feiler
         const teamStats = teamStatsResponse.ok ? await teamStatsResponse.json() : [];
         const playerStats = playerStatsResponse.ok ? await playerStatsResponse.json() : [];
-
-        if (!teamStatsResponse.ok && !playerStatsResponse.ok) {
-          throw new Error("Kunne ikke hente verken lag- eller spillerstatistikk.");
-        }
+        const h2hStats = h2hStatsResponse.ok ? await h2hStatsResponse.json() : null;
         
         setModalData({ 
             teamStats, 
             playerStats,
+            h2hStats, // <-- Setter H2H-data
             fixtureInfo: { homeTeamName: fixture.homeTeamName, awayTeamName: fixture.awayTeamName } 
         });
 
@@ -120,13 +120,13 @@ const FixturesPage: React.FC = () => {
         setModalData({ 
             teamStats: [], 
             playerStats: [],
+            h2hStats: null,
             fixtureInfo: { homeTeamName: 'Feil', awayTeamName: err.message } 
         });
     } finally {
         setIsLoadingModal(false);
     }
   };
-  
 
   const renderContent = () => {
     if (isLoading) return <div className="loading-state"><RefreshCw className="loading-spinner" size={48} /><p>Laster kamper...</p></div>;
@@ -221,6 +221,7 @@ const FixturesPage: React.FC = () => {
             onClose={() => setIsModalOpen(false)}
             teamStats={modalData?.teamStats || []}
             playerStats={modalData?.playerStats || []}
+            h2hStats={modalData?.h2hStats || null}
             fixtureInfo={modalData?.fixtureInfo || { homeTeamName: '', awayTeamName: '' }}
             isLoading={isLoadingModal}
         />

@@ -1,15 +1,16 @@
 // src/components/MatchStatsModal.tsx
 
 import React, { useState } from 'react';
-import { RefreshCw, X, Users, BarChart } from 'lucide-react';
+import { RefreshCw, X, Users, BarChart, History } from 'lucide-react';
 import './MatchStatsModal.css';
-import type { MatchStat, PlayerMatchStat } from '../types';
+import type { MatchStat, PlayerMatchStat, HeadToHeadStats } from '../types';
 
 interface MatchStatsModalProps {
   isOpen: boolean;
   onClose: () => void;
   teamStats: MatchStat[];
   playerStats: PlayerMatchStat[];
+  h2hStats: HeadToHeadStats | null;
   fixtureInfo: { homeTeamName: string; awayTeamName: string };
   isLoading: boolean;
 }
@@ -25,8 +26,8 @@ const TeamComparison: React.FC<{ teamStats: MatchStat[]; fixtureInfo: { homeTeam
   const StatRow: React.FC<{ label: string; home: any; away: any }> = ({ label, home, away }) => {
     const homeValue = home ?? 'N/A';
     const awayValue = away ?? 'N/A';
-    const homeNum = parseInt(String(homeValue).replace('%', ''));
-    const awayNum = parseInt(String(awayValue).replace('%', ''));
+    const homeNum = parseFloat(String(homeValue).replace('%', ''));
+    const awayNum = parseFloat(String(awayValue).replace('%', ''));
     const homeClass = !isNaN(homeNum) && !isNaN(awayNum) && homeNum > awayNum ? 'winner' : '';
     const awayClass = !isNaN(homeNum) && !isNaN(awayNum) && awayNum > homeNum ? 'winner' : '';
     return (
@@ -61,10 +62,16 @@ const TeamComparison: React.FC<{ teamStats: MatchStat[]; fixtureInfo: { homeTeam
 };
 
 const PlayerRatings: React.FC<{ playerStats: PlayerMatchStat[]; fixtureInfo: { homeTeamName: string; awayTeamName: string; }; }> = ({ playerStats, fixtureInfo }) => {
-    // Finner teamId for et av lagene for å kunne splitte spillerne korrekt
-    const homeTeamId = playerStats.find(p => p.teamId)?.teamId;
-    const homePlayers = playerStats.filter(p => p.teamId === homeTeamId).sort((a,b) => (a.substitute ? 1 : -1) - (b.substitute ? 1 : -1));
-    const awayPlayers = playerStats.filter(p => p.teamId !== homeTeamId).sort((a,b) => (a.substitute ? 1 : -1) - (b.substitute ? 1 : -1));
+    const homePlayerSample = playerStats.find(p => p.teamId === playerStats[0]?.teamId);
+    const homeTeamId = homePlayerSample?.teamId;
+
+    const homePlayers = playerStats
+        .filter(p => p.teamId === homeTeamId)
+        .sort((a, b) => (a.substitute ? 1 : 0) - (b.substitute ? 1 : 0));
+
+    const awayPlayers = playerStats
+        .filter(p => p.teamId !== homeTeamId)
+        .sort((a, b) => (a.substitute ? 1 : 0) - (b.substitute ? 1 : 0));
 
     const renderPlayerTable = (players: PlayerMatchStat[]) => (
         <table className="player-stats-table">
@@ -83,10 +90,10 @@ const PlayerRatings: React.FC<{ playerStats: PlayerMatchStat[]; fixtureInfo: { h
               <tr key={p.playerId} style={{ opacity: p.substitute ? 0.7 : 1 }}>
                 <td>{p.playerName}{p.captain && ' (C)'}</td>
                 <td className="numeric rating">{p.rating || '-'}</td>
-                <td className="numeric">{p.goalsTotal}</td>
-                <td className="numeric">{p.assists}</td>
-                <td className="numeric">{p.shotsTotal}</td>
-                <td className="numeric">{p.minutesPlayed}</td>
+                <td className="numeric">{p.goalsTotal ?? 0}</td>
+                <td className="numeric">{p.assists ?? 0}</td>
+                <td className="numeric">{p.shotsTotal ?? 0}</td>
+                <td className="numeric">{p.minutesPlayed ?? 0}</td>
               </tr>
             ))}
           </tbody>
@@ -111,8 +118,60 @@ const PlayerRatings: React.FC<{ playerStats: PlayerMatchStat[]; fixtureInfo: { h
     );
 };
 
-const MatchStatsModal: React.FC<MatchStatsModalProps> = ({ isOpen, onClose, teamStats, playerStats, fixtureInfo, isLoading }) => {
-  const [activeTab, setActiveTab] = useState<'team' | 'player'>('team');
+// --- NY, FORBEDRET KOMPONENT: HeadToHeadComparison ---
+const HeadToHeadComparison: React.FC<{ h2hStats: HeadToHeadStats | null; fixtureInfo: { homeTeamName: string; awayTeamName: string }; }> = ({ h2hStats, fixtureInfo }) => {
+    if (!h2hStats || h2hStats.matchesPlayed === 0) {
+        return <p style={{ textAlign: 'center', padding: '2rem' }}>Ingen tidligere møter funnet i databasen.</p>;
+    }
+    
+    const { matchesPlayed, team1Wins, team2Wins, draws, avgTotalGoals } = h2hStats;
+    
+    const homeWinPct = (team1Wins / matchesPlayed) * 100;
+    const drawPct = (draws / matchesPlayed) * 100;
+    const awayWinPct = (team2Wins / matchesPlayed) * 100;
+
+    return (
+        <div className="h2h-container">
+            <h4>Basert på de siste {matchesPlayed} møtene</h4>
+            
+            <div className="h2h-wins-bar" title={`H:${team1Wins} U:${draws} B:${team2Wins}`}>
+                <div className="h2h-wins-bar-segment home" style={{ width: `${homeWinPct}%` }}></div>
+                <div className="h2h-wins-bar-segment draw" style={{ width: `${drawPct}%` }}></div>
+                <div className="h2h-wins-bar-segment away" style={{ width: `${awayWinPct}%` }}></div>
+            </div>
+
+            <div className="h2h-stats-details">
+                <div className="h2h-stat home">
+                    <span className="stat-value">{team1Wins}</span>
+                    <span className="label">{fixtureInfo.homeTeamName} Seire</span>
+                </div>
+                <div className="h2h-stat draw">
+                    <span className="stat-value">{draws}</span>
+                    <span className="label">Uavgjort</span>
+                </div>
+                <div className="h2h-stat away">
+                    <span className="stat-value">{team2Wins}</span>
+                    <span className="label">{fixtureInfo.awayTeamName} Seire</span>
+                </div>
+            </div>
+
+            <div className="h2h-avg-goals">
+                <span className="label">Gjennomsnittlig Mål/Kamp</span>
+                <span className="value">{avgTotalGoals.toFixed(2)}</span>
+            </div>
+        </div>
+    );
+};
+
+
+const MatchStatsModal: React.FC<MatchStatsModalProps> = ({ isOpen, onClose, teamStats, playerStats, h2hStats, fixtureInfo, isLoading }) => {
+  const [activeTab, setActiveTab] = useState<'team' | 'player' | 'h2h'>('team');
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setActiveTab('team');
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -126,6 +185,20 @@ const MatchStatsModal: React.FC<MatchStatsModalProps> = ({ isOpen, onClose, team
       );
     }
     
+    let content;
+    switch (activeTab) {
+        case 'player':
+            content = <PlayerRatings playerStats={playerStats} fixtureInfo={fixtureInfo} />;
+            break;
+        case 'h2h':
+            content = <HeadToHeadComparison h2hStats={h2hStats} fixtureInfo={fixtureInfo} />;
+            break;
+        case 'team':
+        default:
+            content = <TeamComparison teamStats={teamStats} fixtureInfo={fixtureInfo} />;
+            break;
+    }
+    
     return (
       <>
         <div className="modal-tabs">
@@ -135,13 +208,12 @@ const MatchStatsModal: React.FC<MatchStatsModalProps> = ({ isOpen, onClose, team
           <button className={`modal-tab ${activeTab === 'player' ? 'active' : ''}`} onClick={() => setActiveTab('player')}>
             <BarChart size={16} style={{marginRight: '0.5rem'}}/> Spillerstatistikk
           </button>
+          <button className={`modal-tab ${activeTab === 'h2h' ? 'active' : ''}`} onClick={() => setActiveTab('h2h')}>
+            <History size={16} style={{marginRight: '0.5rem'}}/> H2H
+          </button>
         </div>
         <div className="modal-content-area">
-          {activeTab === 'team' ? (
-            <TeamComparison teamStats={teamStats} fixtureInfo={fixtureInfo} />
-          ) : (
-            <PlayerRatings playerStats={playerStats} fixtureInfo={fixtureInfo} />
-          )}
+          {content}
         </div>
       </>
     );

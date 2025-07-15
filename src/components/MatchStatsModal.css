@@ -153,3 +153,88 @@
   outline: none !important;
   box-shadow: none !important;
 }
+
+/* --- NY, FORBEDRET CSS for H2H-fanen --- */
+.h2h-container {
+    padding: 1rem 0.5rem;
+    text-align: center;
+}
+
+.h2h-container > h4 { /* Endret selektor for å være mer spesifikk */
+    color: var(--neutral-light);
+    font-weight: 500;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Den nye seiers-baren */
+.h2h-wins-bar {
+    display: flex;
+    width: 100%;
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #2f4050; /* Bakgrunnsfarge for hele baren */
+    margin-bottom: 1rem;
+}
+.h2h-wins-bar-segment {
+    height: 100%;
+    transition: width 0.5s ease-in-out;
+}
+.h2h-wins-bar-segment.home {
+    background-color: var(--accent-color-highlight); /* Turkis for hjemmeseier */
+}
+.h2h-wins-bar-segment.draw {
+    background-color: #5a6e8a; /* Nøytral grå for uavgjort */
+}
+.h2h-wins-bar-segment.away {
+    background-color: #8c7ae6; /* Lilla for borteseier */
+}
+
+/* Container for tallene under baren */
+.h2h-stats-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2.5rem;
+}
+.h2h-stat {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+.h2h-stat .label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: var(--neutral-light);
+    font-weight: 400;
+    margin-top: 0.25rem;
+}
+.h2h-stat.home .stat-value { color: var(--accent-color-highlight); }
+.h2h-stat.draw .stat-value { color: #a7b1c2; }
+.h2h-stat.away .stat-value { color: #bca0dc; }
+
+
+/* Styling for det siste kortet */
+.h2h-avg-goals {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #2f4050;
+}
+.h2h-avg-goals .label {
+    font-size: 0.9rem;
+    color: var(--neutral-light);
+}
+.h2h-avg-goals .value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    font-family: var(--font-display);
+}
