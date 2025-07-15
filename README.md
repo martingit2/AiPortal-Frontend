@@ -6,36 +6,42 @@ Velkommen til **Aracanix**, en fullstack analyse- og beslutningsstøtteplattform
 
 Dette prosjektet er delt inn i tre separate repositories som utgjør en komplett, fungerende applikasjon:
 
-*   **Frontend:** [martingit2/AiPortal-Frontend](https://github.com/martingit2/AiPortal-Frontend) (Denne repoen)
-*   **Backend:** [martingit2/AiPortal-Backend](https://github.com/martingit2/AiPortal-Backend) 
-*   **ML Service:** [martingit2/AiPortal-ML-Service](https://github.com/martingit2/AiPortal-ML-Service) 
+*   **Frontend:** [martingit2/AiPortal-Frontend](https://github.com/martingit2/AiPortal-Frontend)
+*   **Backend:** [martingit2/AiPortal-Backend](https://github.com/martingit2/AiPortal-Backend)
+*   **ML Service:** [martingit2/AiPortal-ML-Service](https://github.com/martingit2/AiPortal-ML-Service)
 
 ---
 
 ## Innholdsfortegnelse
 
 - [Om Prosjektet](#om-prosjektet)
-    - [Hovedfunksjoner](#hovedfunksjoner)
-    - [Teknologistack](#teknologistack)
+  - [Prosjektstatus og Formål](#prosjektstatus-og-formål)
+  - [Hovedfunksjoner](#hovedfunksjoner)
+  - [Teknologistack](#teknologistack)
 - [Visuell Oversikt](#visuell-oversikt)
 - [Prosjektstruktur](#prosjektstruktur)
-    - [Frontend (`aracanix-frontend`)](#frontend-aracanix-frontend)
-    - [Backend (`Aracanix-Backend`)](#backend-aracanix-backend)
-    - [ML Service (`aracanix-ml-service`)](#ml-service-aracanix-ml-service)
+  - [Frontend (`aracanix-frontend`)](#frontend-aracanix-frontend-1)
+  - [Backend (`Aracanix-Backend`)](#backend-aracanix-backend-1)
+  - [ML Service (`aracanix-ml-service`)](#ml-service-aracanix-ml-service-1)
 - [Komme i Gang](#komme-i-gang)
-    - [Forutsetninger](#forutsetninger)
-    - [Installasjon og Kjøring](#installasjon-og-kjøring)
+  - [Forutsetninger](#forutsetninger)
+  - [Installasjon og Kjøring](#installasjon-og-kjøring)
 - [Lisens](#lisens)
 
 ---
 
 ## Om Prosjektet
 
-Per i dag er plattformen fokusert på **sportsanalyse og betting**, men arkitekturen er designet for å være modulær og utvidbar til andre domener som aksjer og krypto i fremtiden.
+Per i dag er plattformen primært fokusert på **sportsanalyse og betting**, men arkitekturen er designet for å være modulær og utvidbar til andre domener som aksjer og krypto i fremtiden.
 
-**Viktig Merknad:** Dette er et studentprosjekt laget for læringsformål. Prediksjonsmodellene er under utvikling og er **ikke** presise eller pålitelige nok for reelle finansielle beslutninger. De fungerer som en "proof-of-concept" for å demonstrere en ende-til-ende systemarkitektur.
+### Prosjektstatus og Formål
 
-### Hovedfunksjoner
+**Dette er et aktivt læringsprosjekt under utvikling.** Hensikten er å bygge og forstå en komplett, moderne systemarkitektur.
+
+*   **Ikke alle funksjoner er implementert:** Funksjoner som "Modeller"-siden, "Innstillinger", og analyse for aksjer/krypto er foreløpig kun plassholdere som representerer fremtidsvisjonen for prosjektet.
+*   **Modellene er for demonstrasjon:** Prediksjonsmodellene er ment som en "proof-of-concept" for den tekniske pipelinen og er **ikke** presise eller pålitelige nok for reelle finansielle beslutninger.
+
+### Hovedfunksjoner (Implementert)
 
 -   **Avansert Datainnhenting:** En robust, kø-basert backend i Java (Spring Boot) orkestrerer datainnhenting fra flere eksterne API-er, inkludert kampdata, spillerstatistikk, odds og sosiale medier (Twitter).
 -   **Maskinlærings-pipeline:** En dedikert mikrotjeneste i Python (Flask/XGBoost) trener og serverer prediksjonsmodeller for ulike markeder, som kampvinner og Over/Under, beriket med Head-to-Head (H2H) data.
