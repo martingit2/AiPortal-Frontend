@@ -6,7 +6,7 @@ Velkommen til **Aracanix**, en fullstack analyse- og beslutningsstøtteplattform
 
 Dette prosjektet er delt inn i tre separate repositories som utgjør en komplett, fungerende applikasjon:
 
-*   **Frontend:** [martingit2/AiPortal-Frontend](https://github.com/martingit2/AiPortal-Frontend)
+*   **Frontend:** [martingit2/AiPortal-Frontend](https://github.com/martingit2/AiPortal-Frontend) (Denne repoen)
 *   **Backend:** [martingit2/AiPortal-Backend](https://github.com/martingit2/AiPortal-Backend)
 *   **ML Service:** [martingit2/AiPortal-ML-Service](https://github.com/martingit2/AiPortal-ML-Service)
 
