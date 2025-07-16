@@ -119,3 +119,43 @@ export interface AnalysisModel {
   featureImportances: string; // JSON-streng
   trainingTimestamp: string;
 }
+
+export interface PlacedBet {
+  id: number;
+  market: string;
+  selection: string;
+  stake: number;
+  odds: number;
+  status: 'PENDING' | 'WON' | 'LOST' | 'PUSH';
+  profit: number | null;
+  placedAt: string;
+}
+
+export interface VirtualPortfolio {
+  id: number;
+  name: string;
+  startingBalance: number;
+  currentBalance: number;
+  isActive: boolean;
+  totalBets: number;
+  wins: number;
+  losses: number;
+  pushes: number;
+  discordWebhookUrl: string | null;
+  createdAt: string;
+  model: AnalysisModel; // Bruker det eksisterende interfacet
+}
+
+export interface PlacedBet {
+  id: number;
+  fixtureId: number;
+  homeTeamName: string; // <-- Ny
+  awayTeamName: string; // <-- Ny
+  market: string;
+  selection: string;
+  stake: number;
+  odds: number;
+  status: 'PENDING' | 'WON' | 'LOST' | 'PUSH';
+  profit: number | null;
+  placedAt: string;
+}

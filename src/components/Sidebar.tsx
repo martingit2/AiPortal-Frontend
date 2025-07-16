@@ -1,7 +1,7 @@
 // src/components/Sidebar.tsx
 import React from 'react';
 import { NavLink } from 'react-router-dom'; // Bruk NavLink for aktiv-state styling
-import { LayoutDashboard, BarChart3, Bot, BrainCircuit, Settings, MessageSquare, PieChart, Target, CalendarClock, ListChecks } from 'lucide-react';
+import { LayoutDashboard, BarChart3, Bot, BrainCircuit, Settings, MessageSquare, PieChart, Target, CalendarClock, ListChecks, Briefcase } from 'lucide-react';
 import './Sidebar.css'; // Dedikert CSS for sidebaren
 
 const Sidebar: React.FC = () => {
@@ -46,6 +46,10 @@ const Sidebar: React.FC = () => {
         <NavLink to="/dashboard/upcoming-odds"> 
           <ListChecks size={20} />
           <span>Kommende Odds</span>
+        </NavLink>
+        <NavLink to="/dashboard/portefoljer">
+          <Briefcase size={20} />
+          <span>Porteføljer</span>
         </NavLink>
         
         {/* Skillelinje for å separere hovednavigasjon fra innstillinger etc. */}

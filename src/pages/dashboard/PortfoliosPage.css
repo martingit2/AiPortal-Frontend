@@ -1,0 +1,109 @@
+/* src/pages/dashboard/PortfoliosPage.css */
+
+.portfolios-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+
+.portfolio-card {
+  background-color: var(--background-light);
+  border: 1px solid var(--border-color-light);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+}
+
+.portfolio-card-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.portfolio-name {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.status-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-on-light-secondary);
+  cursor: pointer;
+}
+.status-indicator-sm {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.status-indicator-sm.active { background-color: #2ecc71; }
+.status-indicator-sm.inactive { background-color: #e74c3c; }
+
+
+.portfolio-card-body {
+  padding: 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.balance-display {
+  padding: 1rem;
+  background-color: var(--background-offwhite);
+  border-radius: 6px;
+  text-align: center;
+}
+
+.balance-value {
+  font-size: 1.8rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+.balance-label {
+  font-size: 0.8rem;
+  color: var(--text-on-light-secondary);
+  margin-top: 0.2rem;
+}
+.roi.positive { color: #27ae60; }
+.roi.negative { color: #c0392b; }
+
+.portfolio-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--border-color-light);
+  background-color: var(--background-offwhite);
+  font-size: 0.8rem;
+}
+
+.status-badge.status-won { background-color: #e8f5e9; color: #388e3c; }
+.status-badge.status-lost { background-color: #ffebee; color: #d32f2f; }
+.status-badge.status-pending { background-color: #fff8e1; color: #f57f17; }
+
+.profit-positive { color: #27ae60; font-weight: 600; }
+.profit-negative { color: #c0392b; font-weight: 600; }
+
+.back-link-lg {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary-purple);
+    text-decoration: none;
+    font-weight: 500;
+}
+.back-link-lg:hover { text-decoration: underline; }
+
+.portfolio-card.clickable-card:hover {
+    cursor: pointer;
+    border-color: var(--primary-purple);
+}

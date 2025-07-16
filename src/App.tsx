@@ -16,12 +16,14 @@ import OddsAnalysisPage from './pages/dashboard/OddsAnalysisPage';
 import TeamDetailsPage from './pages/dashboard/TeamDetailsPage';
 import FixturesPage from './pages/dashboard/FixturesPage';
 import UpcomingOddsPage from './pages/dashboard/UpcomingOddsPage';
-import ModelsPage from './pages/dashboard/ModelsPage'; // <-- OPPDATER DENNE IMPORTEN
+import ModelsPage from './pages/dashboard/ModelsPage';
 
 // Importer Clerk-komponenter for autentiseringssjekk
 import { SignedIn, SignedOut } from '@clerk/clerk-react';
 
 import './App.css';
+import PortfoliosPage from './pages/dashboard/PortfoliosPage';
+import PortfolioDetailPage from './pages/dashboard/PortfolioDetailPage';
 
 // Placeholder for sider som ikke er fullt implementert ennå
 // const ModelsPage: React.FC = () => <h1 className="dashboard-page-title">Mine Modeller (kommer snart)</h1>; // <-- FJERN ELLER KOMMENTER UT DENNE LINJEN
@@ -59,6 +61,8 @@ function App() {
           <Route path="odds-analyse" element={<OddsAnalysisPage />} />
           <Route path="fixtures" element={<FixturesPage />} />
           <Route path="upcoming-odds" element={<UpcomingOddsPage />} />
+          <Route path="portefoljer" element={<PortfoliosPage />} />
+          <Route path="portefoljer/:portfolioId" element={<PortfolioDetailPage />} />
           <Route path="innstillinger" element={<SettingsPage />} />
         </Route>
 
