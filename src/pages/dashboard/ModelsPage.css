@@ -1,0 +1,90 @@
+/* src/pages/dashboard/ModelsPage.css */
+
+.models-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.model-card {
+  background-color: var(--background-light);
+  border: 1px solid var(--border-color-light);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.model-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 7px 14px rgba(0,0,0,0.06);
+}
+
+.model-card-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color-light);
+}
+
+.model-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-on-light-primary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.market-type-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  margin-top: 0.5rem;
+}
+.market-type-badge.match-winner {
+  background-color: rgba(138, 43, 226, 0.1);
+  color: #8a2be2;
+}
+.market-type-badge.over-under {
+  background-color: rgba(30, 144, 255, 0.1);
+  color: #1e90ff;
+}
+
+.model-card-body {
+  padding: 1.25rem;
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.metric-display {
+  display: flex;
+  flex-direction: column;
+}
+.metric-value {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+.metric-label {
+  font-size: 0.8rem;
+  color: var(--text-on-light-secondary);
+  margin-top: 0.2rem;
+}
+.metric-value.accuracy { color: #27ae60; }
+.metric-value.log-loss { color: #e67e22; }
+
+.model-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--border-color-light);
+  background-color: var(--background-offwhite);
+  font-size: 0.8rem;
+  color: var(--text-on-light-secondary);
+}

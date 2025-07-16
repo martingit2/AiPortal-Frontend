@@ -1,0 +1,55 @@
+/* src/components/ModelDetailModal.css */
+.model-detail-content {
+  background-color: #1a222e;
+  color: #dfe4ed;
+  padding: 1.5rem 2rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  width: 100%;
+  max-width: 800px;
+  animation: fadeIn 0.3s ease-out;
+  border: 1px solid #2f4050; 
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.report-section {
+  margin-bottom: 2rem;
+}
+
+.report-section h4 {
+  font-family: var(--font-display);
+  color: var(--accent-color-highlight);
+  border-bottom: 1px solid #2f4050;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.report-section pre {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.feature-importance-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.feature-importance-table th, .feature-importance-table td {
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid #2f4050;
+}
+.feature-importance-table th {
+  font-weight: 600;
+  color: #a7b1c2;
+}
+.feature-importance-table td:last-child {
+  font-family: 'Courier New', Courier, monospace;
+  text-align: right;
+}

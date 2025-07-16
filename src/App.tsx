@@ -13,19 +13,18 @@ import DataFeedPage from './pages/dashboard/DataFeedPage';
 import AnalysesPage from './pages/dashboard/AnalysesPage';
 import FootballStatsPage from './pages/dashboard/FootballStatsPage';
 import OddsAnalysisPage from './pages/dashboard/OddsAnalysisPage';
-
+import TeamDetailsPage from './pages/dashboard/TeamDetailsPage';
+import FixturesPage from './pages/dashboard/FixturesPage';
+import UpcomingOddsPage from './pages/dashboard/UpcomingOddsPage';
+import ModelsPage from './pages/dashboard/ModelsPage'; // <-- OPPDATER DENNE IMPORTEN
 
 // Importer Clerk-komponenter for autentiseringssjekk
 import { SignedIn, SignedOut } from '@clerk/clerk-react';
 
 import './App.css';
-import TeamDetailsPage from './pages/dashboard/TeamDetailsPage';
-import FixturesPage from './pages/dashboard/FixturesPage';
-import UpcomingOddsPage from './pages/dashboard/UpcomingOddsPage';
-
 
 // Placeholder for sider som ikke er fullt implementert ennå
-const ModelsPage: React.FC = () => <h1 className="dashboard-page-title">Mine Modeller (kommer snart)</h1>;
+// const ModelsPage: React.FC = () => <h1 className="dashboard-page-title">Mine Modeller (kommer snart)</h1>; // <-- FJERN ELLER KOMMENTER UT DENNE LINJEN
 const SettingsPage: React.FC = () => <h1 className="dashboard-page-title">Innstillinger (kommer snart)</h1>;
 
 function App() {
@@ -55,11 +54,8 @@ function App() {
           <Route path="boter" element={<BotsPage />} />
           <Route path="data-feed" element={<DataFeedPage />} />
           <Route path="fotball-stats" element={<FootballStatsPage />} />
-          
-
           <Route path="team-details/:teamId/season/:season" element={<TeamDetailsPage />} />
-          
-          <Route path="modeller" element={<ModelsPage />} />
+          <Route path="modeller" element={<ModelsPage />} /> {/* Denne linjen er nå korrekt */}
           <Route path="odds-analyse" element={<OddsAnalysisPage />} />
           <Route path="fixtures" element={<FixturesPage />} />
           <Route path="upcoming-odds" element={<UpcomingOddsPage />} />

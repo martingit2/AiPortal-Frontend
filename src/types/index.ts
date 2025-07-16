@@ -100,3 +100,22 @@ export interface PaginatedResponse<T> {
   totalElements: number;
   number: number;
 }
+
+export interface HeadToHeadStats {
+  matchesPlayed: number;
+  team1Wins: number;
+  team2Wins: number;
+  draws: number;
+  avgTotalGoals: number;
+}
+
+export interface AnalysisModel {
+  id: number;
+  modelName: string;
+  marketType: string;
+  accuracy: number;
+  logLoss: number;
+  classificationReport: string;
+  featureImportances: string; // JSON-streng
+  trainingTimestamp: string;
+}
