@@ -70,6 +70,11 @@ Her er noen glimt fra plattformens ulike funksjoner, som viser administrasjon av
 | ![Bilde av oddsanalyse-siden](./src/bilder/odds-analyse.png)        | ![Bilde av spillerstatistikk-modalen](./src/bilder/spiller-stats.png) |
 | **Interaktiv Form-analyse**                                         | **Oversikt over Tilgjengelig Odds**                               |
 | ![Bilde av lagdetaljer-siden med graf](./src/bilder/lagdetaljer.png) | ![Bilde av odds-oversikt modalen](./src/bilder/odds.png) |
+| **Porteføljeoversikt** | **Administrasjon av Porteføljespill** |
+| ![Bilde av porteføljeoversikt](./src/bilder/portfolio.png) | ![Bilde av spesifikke spill i porteføljen](./src/bilder/portfoliobets.png) |
+| **Prediksjonsmodeller** | **Utvidet Odds-visning** |
+| ![Bilde av oversikt over modeller](./src/bilder/modeller.png) | ![Bilde av utvidet odds-visning](./src/bilder/merodds.png) |
+
 
 ---
 
