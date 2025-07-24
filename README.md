@@ -74,7 +74,10 @@ Her er noen glimt fra plattformens ulike funksjoner, som viser administrasjon av
 | ![Bilde av porteføljeoversikt](./src/bilder/portfolio.png) | ![Bilde av spesifikke spill i porteføljen](./src/bilder/portfoliobets.png) |
 | **Prediksjonsmodeller** | **Utvidet Odds-visning** |
 | ![Bilde av oversikt over modeller](./src/bilder/modeller.png) | ![Bilde av utvidet odds-visning](./src/bilder/merodds.png) |
-
+| **Discord-varsler** | **Kampoversikt** |
+| ![Bilde av Discord-varsler](./src/bilder/discordbot.png) | ![Bilde av kampoversikt](./src/bilder/fixtures.png) |
+| **Detaljert Lagstatistikk** | **Detaljer om Modeller** |
+| ![Bilde av lagstatistikk](./src/bilder/lag-stats.png) | ![Bilde av modelldetaljer](./src/bilder/modelldetaljer.png) |
 
 ---
 
